@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Online Auction Website</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" />
+    <style>
+        /* Add your CSS styling here */
+        body { font-family: Arial, sans-serif; }
+        .header { background-color: #f1f1f1; padding: 20px; text-align: center; }
+        .footer { background-color: #f1f1f1; padding: 20px; text-align: center; position: relative; bottom: 0; width: 100%; }
+        .main-body { display: flex; justify-content: space-around; padding: 20px; }
+        .advertisements { width: 50%; }
+        .menu { display: flex; justify-content: space-around; margin-bottom: 20px; }
+        .slick-slide img { width: 100%; }
+        .header img { max-width: 15%; height: auto; } /* Adjust the max-width as per your requirement */
+    </style>
+</head>
+<body>
+
+<div class="header">
+
+    <div class="menu">
+        <a href="#">المزادات</a>
+        <a href="#">عرض السلع</a>
+        <a href="#">الحساب</a>
+    </div>
+</div>
+
+<div class="main-body">
+    <div class="advertisements">
+        <!-- Slideshow container -->
+        <div class="slideshow">
+            <!-- Slides -->
+            <div><img src="{{ url_for('static', filename='ad1.jpg') }}" alt="Advertisement 1"></div>
+            <div><img src="{{ url_for('static', filename='ad2.jpg') }}" alt="Advertisement 2"></div>
+            <div><img src="{{ url_for('static', filename='ad3.jpg') }}" alt="Advertisement 3"></div>
+            <!-- Add more slides as needed -->
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+    <p>Information about our website goes here.</p>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+<script>
+$(document).ready(function(){
+    $('.slideshow').slick({
+        dots: true,
+        infinite: true,
+        speed: 300,
+        slidesToShow: 1,
+        adaptiveHeight: true,
+        autoplay: true,
+        autoplaySpeed: 2000
+    });
+});
+</script>
+
+</body>
+</html>
