@@ -1,11 +1,33 @@
-version: '3'
-
+version: '3.8'
 services:
   web:
     build: .
     ports:
       - "5000:5000"
-    volumes:
-      - ./src/flask-website:/app
     environment:
-      FLASK_ENV: development
+      - FLASK_APP=src/flask-website/app.py
+      - FLASK_RUN_HOST=0.0.0.0
+      - HOSTNAME=db
+      - SCHEMA=mydatabase          # Update to match your database name
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+      - SQLALCHEMY_DATABASE_URI=mysql+pymysql://user:password@db/mydatabase   # Update URI accordingly
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+
+  db:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=mydatabase   # Update to match your database name
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
