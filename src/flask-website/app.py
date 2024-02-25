@@ -90,7 +90,40 @@ def dashboard():
         flash('Please log in to access the dashboard')
         return redirect(url_for('login'))
 
+from flask import Flask, render_template
 
+
+
+@app.route('/auction')
+def auction_listing():
+    # Dummy data for illustration purposes
+    popular_categories = ['Mobile', 'Furniture', 'Cars']
+    items = [
+        {
+            'title': 'Samsung',
+            'category': 'Mobile',
+            'image_url': 'path_to_image',
+            'time_left': '0h 5m',
+            'current_bid': '100'
+        },
+        {
+            'title': 'Iphone',
+            'category': 'Mobile',
+            'image_url': url_for('static', filename='iphone.jpg'),
+            'time_left': '1h 15m',
+            'current_bid': '100'
+        },
+        {
+            'title': 'Iphone',
+            'category': 'Mobile',
+            'image_url': url_for('static', filename='iphone.jpg'),
+            'time_left': '3h 15m',
+            'current_bid': '100'
+        },
+    ]
+    # Sort items based on the time left in ascending order
+    sorted_items = sorted(items, key=lambda x: x['time_left'])
+    return render_template('auction.html', categories=popular_categories, items=sorted_items)
 
 if __name__ == '__main__':
     app.run(debug=True)

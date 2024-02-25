@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auction Listings</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        .header {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+        }
+
+        .header nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0 15px;
+        }
+
+        .header nav a:hover {
+            text-decoration: underline;
+        }
+
+        .main-body {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auction-item {
+            border: 1px solid #ddd;
+            margin: 10px;
+            padding: 10px;
+            width: calc(100% / 3 - 40px); /* Three items per row */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .auction-item:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .auction-item img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .auction-details {
+            margin-top: 10px;
+        }
+
+        button {
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+
+        .footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 20px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Auction Listings</h1>
+    <nav>
+        <!-- Dynamic categories listing -->
+        {% for category in categories %}
+        <a href="#{{ category }}">{{ category }}</a>
+        {% endfor %}
+    </nav>
+</div>
+
+<div class="main-body">
+    <!-- Items listed by time remaining -->
+    {% for item in items %}
+    <div class="auction-item">
+        <img src="{{ item.image_url }}" alt="{{ item.title }}">
+        <div class="auction-details">
+            <h3>{{ item.title }}</h3>
+            <p>Time left: {{ item.time_left }}</p>
+            <p>Current bid: ${{ item.current_bid }}</p>
+            <button>Place Bid</button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+
+
+</body>
+</html>
