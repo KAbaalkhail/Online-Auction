@@ -4,3 +4,4 @@ Flask-SQLAlchemy==2.5.1
 pymysql==1.1.0
 Flask-Bcrypt==1.0.1
 Werkzeug==2.2.2
+pytz==2022.1

@@ -1,6 +1,13 @@
 # Use an official Python runtime as a parent image
 FROM python:3.8-slim
 
+# Set the timezone environment variable
+ENV TZ=Asia/Riyadh
+
+# Install tzdata package
+RUN apt-get update && apt-get install -y tzdata && \
+    ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && dpkg-reconfigure -f noninteractive tzdata
+
 # Set the working directory in the container
 WORKDIR /app
 
