@@ -119,5 +119,9 @@ def auction_listing():
     sorted_items = sorted(items, key=lambda x: x['time_left'])
     return render_template('auction.html', categories=popular_categories, items=sorted_items)
 
+@app.route('/form')
+def item_form():
+    return render_template('form.html')
+
 if __name__ == '__main__':
         app.run(debug=True)  # Turn off debug mode for production deployment
