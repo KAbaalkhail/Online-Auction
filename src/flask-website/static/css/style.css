@@ -1,0 +1,52 @@
+/* Add this to your base.html within a <style> tag or an external stylesheet */
+body, html {
+    margin: 0;
+    background-color: #e9ecef; /* Background color changed to light grey */
+}
+
+.main-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100vh; /* Use min-height instead of height for better flexibility */
+    color: black; /* Text color */
+}
+
+.main-body h1 {
+    font-size: 4rem; /* Large text */
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+/* Make sure your advertisement container class matches this one */
+.advertisement-container {
+    width: 100%;
+    max-width: 1200px; /* Set the max width for your content */
+    margin: auto; /* Ensure it's centered */
+}
+
+/* This should match your Slick Slider container class */
+.advertisement-slideshow {
+    position: relative;
+    margin: auto;
+}
+
+/* Style for each individual slide */
+.slide img {
+    width: 100%;
+    height: auto; /* Maintain aspect ratio */
+    object-fit: cover; /* Cover the slide area */
+    border-radius: 10px; /* Rounded corners */
+}
+
+/* Custom Slick styles */
+.slick-dots li button:before {
+    color: white; /* Dot color */
+}
+
+.slick-prev:before, .slick-next:before {
+    color: blue; /* Arrow color */
+    font-size: 24px; /* Arrow size */
+}

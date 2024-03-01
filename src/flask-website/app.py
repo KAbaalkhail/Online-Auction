@@ -80,6 +80,14 @@ def dashboard():
         flash('Please log in to access the dashboard')
         return redirect(url_for('login'))
 
+
+@app.route('/contactus')  # Define the route for the contactus page
+def contactus():
+    return render_template('contactus.html')
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
 @app.route('/auction')
 def auction_listing():
     popular_categories = ['Mobile', 'Furniture', 'Cars']

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Website{% endblock %}</title>
+    <!-- Include Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;600&family=Noto+Sans+Arabic&display=swap" rel="stylesheet">
+    <!-- Include Tailwind CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <!-- Include Flowbite (if needed) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.4.0/flowbite.min.css" rel="stylesheet" />
+    <!-- Include Font Awesome (if needed) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Link to your custom CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="flex flex-col min-h-screen">
+    <!-- Header -->
+    <header>
+        <!-- Navbar -->
+        <nav class="bg-white shadow-md w-full">
+            <div class="max-w-screen-xl mx-auto px-4 py-2 flex justify-between items-center">
+                <!-- Registration link aligned with the navbar links -->
+                <div class="flex items-center">
+                    <a href="{{ url_for('login') }}" class="px-6 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">
+                        التسجيل
+                    </a>
+                </div>
+                <!-- Centered navbar links -->
+                <div class="flex-grow flex items-center justify-center">
+                    <ul class="flex flex-row space-x-8 font-medium">
+                        <li><a href="{{ url_for('contactus') }}" class="text-gray-900 hover:text-blue-700">تواصل معنا</a></li>
+                        <li><a href="{{ url_for('auction_listing') }}" class="text-gray-900 hover:text-blue-700">المزادات</a></li>
+                        <li><a href="{{ url_for('dashboard') }}" class="text-gray-900 hover:text-blue-700">الرئسية</a></li>
+                    </ul>
+                </div>
+                <!-- Logo aligned with the navbar links -->
+                <div class="flex items-center">
+                    <a href="{{ url_for('dashboard') }}">
+                        <img src="{{ url_for('static', filename='logo-new.png') }}" class="h-20 w-20" alt="Your Website Logo">
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <!-- Body content -->
+    <main class="flex-grow">
+        {% block body %}{% endblock %}
+    </main>
+    <!-- Footer -->
+    <footer class="bg-white rounded-lg shadow dark:bg-white">
+        <div class="w-full max-w-screen-xl mx-auto p-4">
+            <hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
+            <span class="block text-sm text-black sm:text-center dark:text-black">© 2024 <a
+                     class="hover:underline">مزادي</a>. All Rights
+                Reserved.</span>
+        </div>
+    </footer>
+    <!-- Include JavaScript libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>
