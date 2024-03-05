@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Item for Auction</title>
+    <title>إضافة عنصر للمزاد</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -17,7 +17,7 @@
             display: block;
             margin-bottom: 8px;
         }
-        input, textarea {
+        input, textarea, select {
             width: 100%;
             padding: 8px;
             margin-bottom: 16px;
@@ -36,25 +36,42 @@
         }
     </style>
 </head>
-<body>
-    <h2>Add Item for Auction</h2>
+<body dir="rtl">
+    <h2>إضافة عنصر للمزاد</h2>
     <form action="/submit_item" method="post" enctype="multipart/form-data">
-        <label for="itemName">Item Name:</label>
+        <label for="itemName">اسم العنصر:</label>
         <input type="text" id="itemName" name="itemName" required>
 
-        <label for="itemDescription">Item Description:</label>
+        <label for="itemDescription">وصف العنصر:</label>
         <textarea id="itemDescription" name="itemDescription" rows="4" required></textarea>
 
-        <label for="startingBid">Starting Bid (in $):</label>
+        <label for="startingBid">المزايدة الابتدائية (بالدولار):</label>
         <input type="number" id="startingBid" name="startingBid" min="0" required>
 
-        <label for="auctionEndTime">Auction End Time:</label>
+        <label for="auctionEndTime">وقت انتهاء المزاد:</label>
         <input type="datetime-local" id="auctionEndTime" name="auctionEndTime" required>
 
-        <label for="itemImage">Item Image:</label>
-        <input type="file" id="itemImage" name="itemImage" accept="image/*" required>
+        <label for="itemCategory">فئة العنصر:</label>
+        <select id="itemCategory" name="itemCategory" required>
+            {% for category in item_categories %}
+                <option value="{{ category }}">{{ category }}</option>
+            {% endfor %}
+        </select>
 
-        <button type="submit">Submit Item malik</button>
+        <label for="itemCondition">حالة العنصر:</label>
+        <select id="itemCondition" name="itemCondition" required>
+            {% for condition in item_conditions %}
+                <option value="{{ condition }}">{{ condition }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="sellerLocation">موقع البائع:</label>
+        <input type="text" id="sellerLocation" name="sellerLocation" required>
+
+        <label for="itemImage">صور العنصر (الصور فقط مسموحة):</label>
+        <input type="file" id="itemImage" name="itemImage" accept="image/*" multiple required>
+
+        <button type="submit">إرسال العنصر</button>
     </form>
 </body>
 </html>
