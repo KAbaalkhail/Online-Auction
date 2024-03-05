@@ -129,7 +129,10 @@ def auction_listing():
 
 @app.route('/form')
 def item_form():
-    return render_template('form.html')
+    item_categories = ['Electronics', 'Furniture', 'Clothing']
+    item_conditions = ['New', 'Used', 'Like New']
+
+    return render_template('form.html', item_categories=item_categories, item_conditions=item_conditions)
 
 if __name__ == '__main__':
         app.run(debug=True)  # Turn off debug mode for production deployment
