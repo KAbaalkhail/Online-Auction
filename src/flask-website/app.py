@@ -1,3 +1,4 @@
+# app.py
 
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
@@ -24,6 +25,18 @@ class User(db.Model):
     email = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.TIMESTAMP, server_default=db.func.current_timestamp(), nullable=False)
+
+# Define the Item model
+class Item(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+    description = db.Column(db.Text)
+    start_bid = db.Column(db.Float)
+    time_end = db.Column(db.DateTime)
+    category = db.Column(db.String(50))
+    condition = db.Column(db.String(50))
+    location = db.Column(db.String(100))
+    img = db.Column(db.String(255))
 
 @app.before_first_request
 def create_tables():
@@ -80,13 +93,9 @@ def dashboard():
         flash('Please log in to access the dashboard')
         return redirect(url_for('login'))
 
-
-@app.route('/contactus')  # Define the route for the contactus page
+@app.route('/contactus')
 def contactus():
     return render_template('contactus.html')
-
-if __name__ == '__main__':
-    app.run(debug=True)
 
 @app.route('/auction')
 def auction_listing():
@@ -95,31 +104,42 @@ def auction_listing():
     now = datetime.now(timezone)
     items = [
         {
-            'title': 'Samsung Galaxy',
+            'id': 1,
+            'name': 'Samsung Galaxy',
+            'description': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+            'start_bid': '100',
+            'time_end': '2024-04-30 17:00:00',
             'category': 'Mobile',
-            'image_url': 'path_to_image_samsung',
-            'end_time': '2024-04-30 17:00:00',
-            'current_bid': '100'
+            'condition': 'Used',
+            'location': 'Riyadh',
+            'img': 'path_to_image_samsung'
         },
         {
-            'title': 'Iphone 13',
+            'id': 2,
+            'name': 'Iphone 13',
+            'description': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+            'start_bid': '200',
+            'time_end': '2024-04-30 16:00:00',
             'category': 'Mobile',
-            'image_url': 'path_to_image_iphone',
-            'end_time': '2024-04-30 16:00:00',
-            'current_bid': '200'
+            'condition': 'New',
+            'location': 'Jeddah',
+            'img': 'path_to_image_iphone'
         },
         {
-            'title': 'Nokia 3310',
+            'id': 3,
+            'name': 'Nokia 3310',
+            'description': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+            'start_bid': '50',
+            'time_end': '2024-04-30 18:00:00',
             'category': 'Mobile',
-            'image_url': 'path_to_image_nokia',
-            'end_time': '2024-04-30 18:00:00',
-            'current_bid': '50'
-        },
-
+            'condition': 'Like New',
+            'location': 'Dammam',
+            'img': 'path_to_image_nokia'
+        }
     ]
 
     for item in items:
-        end_time = timezone.localize(datetime.strptime(item['end_time'], '%Y-%m-%d %H:%M:%S'))
+        end_time = timezone.localize(datetime.strptime(item['time_end'], '%Y-%m-%d %H:%M:%S'))
         time_left = end_time - now
         item['time_left'] = str(time_left) if time_left.total_seconds() > 0 else "Auction Ended"
         item['end_time_iso'] = end_time.isoformat()
@@ -127,12 +147,21 @@ def auction_listing():
     sorted_items = sorted(items, key=lambda x: x['time_left'])
     return render_template('auction.html', categories=popular_categories, items=sorted_items)
 
+@app.route('/item_details/<int:item_id>')
+def item_details(item_id):
+    print("Item ID:", item_id)  # Add debug print to check item_id
+    # Fetch item details from the database using item_id
+    item = Item.query.get(item_id)
+    if not item:
+        flash("Item not found")
+        return redirect(url_for('auction_listing'))  # Redirect back to the auction listing page
+    return render_template('item_details.html', item=item)
+
 @app.route('/form')
 def item_form():
     item_categories = ['Electronics', 'Furniture', 'Clothing']
     item_conditions = ['New', 'Used', 'Like New']
-
     return render_template('form.html', item_categories=item_categories, item_conditions=item_conditions)
 
 if __name__ == '__main__':
-        app.run(debug=True)  # Turn off debug mode for production deployment
+    app.run(debug=True)  # Turn off debug mode for production deployment

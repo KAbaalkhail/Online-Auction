@@ -1,12 +1,14 @@
+<!-- auction.html -->
+
 {% extends 'base.html' %}
-{% block title %}Auction Listings{% endblock %}
+{% block title %}قوائم المزادات{% endblock %}
 
 {% block extra_head %}
-    <!-- Additional head content specific to the auction page can go here -->
+    <!-- يمكن وضع المحتوى الإضافي لرأس الصفحة المحدد لصفحة المزاد هنا -->
 {% endblock %}
 
 {% block body %}
-<!-- Independent Category Listing -->
+<!-- قائمة الفئات المستقلة -->
 <nav class="category-listing">
     {% for category in categories %}
     <a href="#{{ category }}">{{ category }}</a>
@@ -14,15 +16,19 @@
 </nav>
 
 <div class="main-body">
-    <!-- Items listed by time remaining -->
+    <!-- العناصر المدرجة حسب الوقت المتبقي -->
     {% for item in items %}
     <div class="auction-item" data-end-time="{{ item.end_time_iso }}">
-        <img src="{{ item.image_url }}" alt="{{ item.title }}">
+        <img src="{{ item.img }}" alt="{{ item.name }}">
         <div class="auction-details">
-            <h3>{{ item.title }}</h3>
-            <p class="time-left">Time left: <span>{{ item.time_left }}</span></p>
-            <p>Current bid: ${{ item.current_bid }}</p>
-            <button>Place Bid</button>
+            <h3>{{ item.name }}</h3>
+            <p class="time-left">الوقت المتبقي: <span>{{ item.time_left }}</span></p>
+            <p>المزايدة الابتدائية: $<span class="start-bid">{{ item.start_bid }}</span></p>
+            <p>الفئة: {{ item.category }}</p>
+            <p>الحالة: {{ item.condition }}</p>
+            <p>الموقع: {{ item.location }}</p>
+            <!-- Removed the Place Bid button -->
+            <a href="{{ url_for('item_details', item_id=item.id) }}">تفاصيل العنصر</a>
         </div>
     </div>
     {% endfor %}
@@ -39,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var now = new Date();
             var timeLeft = endTime - now;
 
-            // Calculate days, hours, minutes, and seconds left
+            // حساب الأيام والساعات والدقائق والثواني المتبقية
             var seconds = Math.floor(timeLeft / 1000);
             var minutes = Math.floor(seconds / 60);
             var hours = Math.floor(minutes / 60);
@@ -49,9 +55,9 @@ document.addEventListener('DOMContentLoaded', function() {
             minutes %= 60;
             seconds %= 60;
 
-            var timeString = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            var timeString = `${days} يوم ${hours} ساعة ${minutes} دقيقة ${seconds} ثانية`;
 
-            // Update the display
+            // تحديث العرض
             var display = item.querySelector('.time-left span');
             if (display) {
                 display.textContent = timeString;
@@ -59,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Update auction times every second
+    // تحديث أوقات المزاد كل ثانية
     setInterval(updateAuctionTimes, 1000);
 });
 </script>

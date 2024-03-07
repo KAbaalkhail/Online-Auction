@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}تفاصيل العنصر{% endblock %}
+
+{% block extra_head %}
+    <!-- يمكن وضع المحتوى الإضافي لرأس الصفحة هنا -->
+{% endblock %}
+
+{% block body %}
+<h1>{{ item.name }}</h1>
+<img src="{{ item.img }}" alt="{{ item.name }}">
+<p>{{ item.description }}</p>
+<!-- Add any additional item details here -->
+{% endblock %}
