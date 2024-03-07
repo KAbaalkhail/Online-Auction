@@ -1,12 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auction Listings</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block title %}Auction Listings{% endblock %}
 
+{% block extra_head %}
+    <!-- Additional head content specific to the auction page can go here -->
+{% endblock %}
+
+{% block body %}
 <!-- Independent Category Listing -->
 <nav class="category-listing">
     {% for category in categories %}
@@ -28,7 +27,9 @@
     </div>
     {% endfor %}
 </div>
+{% endblock %}
 
+{% block extra_scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     function updateAuctionTimes() {
@@ -62,6 +63,4 @@ document.addEventListener('DOMContentLoaded', function() {
     setInterval(updateAuctionTimes, 1000);
 });
 </script>
-
-</body>
-</html>
+{% endblock %}
