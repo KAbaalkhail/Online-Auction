@@ -1,5 +1,3 @@
-# app.py
-
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -37,6 +35,18 @@ class Item(db.Model):
     condition = db.Column(db.String(50))
     location = db.Column(db.String(100))
     img = db.Column(db.String(255))
+
+    def delete_if_ended(self):
+        timezone = pytz.timezone('Asia/Riyadh')
+        now = datetime.now(timezone)
+
+            # Make self.time_end aware by adding timezone information
+        self.time_end = timezone.localize(self.time_end)
+
+        if self.time_end < now - timedelta(minutes=1):
+            db.session.delete(self)
+            db.session.commit()
+
 
 @app.before_first_request
 def create_tables():
@@ -102,49 +112,47 @@ def auction_listing():
     popular_categories = ['Mobile', 'Furniture', 'Cars']
     timezone = pytz.timezone('Asia/Riyadh')
     now = datetime.now(timezone)
-    items = [
-        {
-            'id': 1,
-            'name': 'Samsung Galaxy',
-            'description': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-            'start_bid': '100',
-            'time_end': '2024-04-30 17:00:00',
-            'category': 'Mobile',
-            'condition': 'Used',
-            'location': 'Riyadh',
-            'img': 'path_to_image_samsung'
-        },
-        {
-            'id': 2,
-            'name': 'Iphone 13',
-            'description': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-            'start_bid': '200',
-            'time_end': '2024-04-30 16:00:00',
-            'category': 'Mobile',
-            'condition': 'New',
-            'location': 'Jeddah',
-            'img': 'path_to_image_iphone'
-        },
-        {
-            'id': 3,
-            'name': 'Nokia 3310',
-            'description': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-            'start_bid': '50',
-            'time_end': '2024-04-30 18:00:00',
-            'category': 'Mobile',
-            'condition': 'Like New',
-            'location': 'Dammam',
-            'img': 'path_to_image_nokia'
-        }
-    ]
 
+    # Fetch items from the database
+    items = Item.query.all()
+
+    formatted_items = []
+
+    # Format the fetched items into dictionaries
     for item in items:
+        item.delete_if_ended()  # Check and delete if the item has ended
+        formatted_item = {
+            'id': item.id,
+            'name': item.name,
+            'description': item.description,
+            'start_bid': item.start_bid,
+            'time_end': item.time_end.strftime('%Y-%m-%d %H:%M:%S'),
+            'category': item.category,
+            'condition': item.condition,
+            'location': item.location,
+            'img': item.img
+        }
+        formatted_items.append(formatted_item)
+
+    # Calculate time left for each item
+    for item in formatted_items:
         end_time = timezone.localize(datetime.strptime(item['time_end'], '%Y-%m-%d %H:%M:%S'))
         time_left = end_time - now
-        item['time_left'] = str(time_left) if time_left.total_seconds() > 0 else "Auction Ended"
+        if time_left.total_seconds() > 0:
+            # If time_left is positive, calculate and format the time left string
+            days = time_left.days
+            hours, remainder = divmod(time_left.seconds, 3600)
+            minutes, seconds = divmod(remainder, 60)
+            item['time_left'] = f"{days} days {hours} hours {minutes} minutes {seconds} seconds"
+        else:
+            # If time_left is non-positive, set the time_left string to "Auction Ended"
+            item['time_left'] = "Auction Ended"
         item['end_time_iso'] = end_time.isoformat()
 
-    sorted_items = sorted(items, key=lambda x: x['time_left'])
+    # Sort the items by end time
+    sorted_items = sorted(formatted_items, key=lambda x: x['time_left'])
+
+    # Render the template with the fetched items
     return render_template('auction.html', categories=popular_categories, items=sorted_items)
 
 @app.route('/item_details/<int:item_id>')
@@ -157,10 +165,37 @@ def item_details(item_id):
         return redirect(url_for('auction_listing'))  # Redirect back to the auction listing page
     return render_template('item_details.html', item=item)
 
-@app.route('/form')
+
+@app.route('/form', methods=['GET', 'POST'])
 def item_form():
     item_categories = ['Electronics', 'Furniture', 'Clothing']
     item_conditions = ['New', 'Used', 'Like New']
+
+    if request.method == 'POST':
+        # Process form submission here
+        name = request.form['itemName']
+        description = request.form['itemDescription']
+        start_bid = float(request.form['startingBid'])
+        auction_end_time = datetime.strptime(request.form['auctionEndTime'], '%Y-%m-%dT%H:%M')
+        category = request.form['itemCategory']
+        condition = request.form['itemCondition']
+        location = request.form['sellerLocation']
+        # Save the uploaded image file to a directory or cloud storage and get the file path
+        img = 'path_to_image'  # Replace 'path_to_image' with the actual file path
+
+        # Here, you should add code to store the form data in the database
+        new_item = Item(name=name, description=description, start_bid=start_bid,
+                        time_end=auction_end_time, category=category,
+                        condition=condition, location=location, img=img)
+
+        # Add the new item to the database session
+        db.session.add(new_item)
+        db.session.commit()
+
+        flash('Item added successfully!')
+        # Redirect to the same page after form submission
+        return redirect(url_for('item_form'))
+
     return render_template('form.html', item_categories=item_categories, item_conditions=item_conditions)
 
 if __name__ == '__main__':
