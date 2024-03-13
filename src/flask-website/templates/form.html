@@ -1,85 +1,47 @@
-<!DOCTYPE html>
-<html lang="ar">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إضافة عنصر للمزاد</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        form {
-            max-width: 600px;
-            margin: auto;
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-        }
-        input, textarea, select {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 16px;
-            box-sizing: border-box;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .flash-message {
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 5px;
-            background-color: #f0f0f0;
-        }
-    </style>
-</head>
-<body dir="rtl">
-    <h2>إضافة عنصر للمزاد</h2>
+{% extends 'base.html' %}
 
+{% block title %}إضافة عنصر للمزاد{% endblock %}
 
-    <form action="/form" method="post" enctype="multipart/form-data">
-        <label for="itemName">اسم العنصر:</label>
-        <input type="text" id="itemName" name="itemName" required>
+{% block body %}
+<div class="flex justify-center items-center h-full">
+    <div class="w-full max-w-md" dir="rtl"> <!-- Added dir="rtl" -->
+        <h2 class="text-center mb-4">إضافة عنصر للمزاد</h2>
 
-        <label for="itemDescription">وصف العنصر:</label>
-        <textarea id="itemDescription" name="itemDescription" rows="4" required></textarea>
+        <form action="/form" method="post" enctype="multipart/form-data">
+            <label for="itemName">اسم العنصر:</label><br>
+            <input type="text" id="itemName" name="itemName" required><br><br>
 
-        <label for="startingBid">المزايدة الابتدائية (بالدولار):</label>
-        <input type="number" id="startingBid" name="startingBid" min="0" required>
+            <label for="itemDescription">وصف العنصر:</label><br>
+            <textarea id="itemDescription" name="itemDescription" rows="4" required></textarea><br><br>
 
-        <label for="auctionEndTime">وقت انتهاء المزاد:</label>
-        <input type="datetime-local" id="auctionEndTime" name="auctionEndTime" required>
+            <label for="startingBid">المزايدة الابتدائية (بالريال):</label><br>
+            <input type="number" id="startingBid" name="startingBid" min="0" required><br><br>
 
-        <label for="itemCategory">فئة العنصر:</label>
-        <select id="itemCategory" name="itemCategory" required>
-            {% for category in item_categories %}
-                <option value="{{ category }}">{{ category }}</option>
-            {% endfor %}
-        </select>
+            <label for="auctionEndTime">وقت انتهاء المزاد:</label><br>
+            <input type="datetime-local" id="auctionEndTime" name="auctionEndTime" required><br><br>
 
-        <label for="itemCondition">حالة العنصر:</label>
-        <select id="itemCondition" name="itemCondition" required>
-            {% for condition in item_conditions %}
-                <option value="{{ condition }}">{{ condition }}</option>
-            {% endfor %}
-        </select>
+            <label for="itemCategory">فئة العنصر:</label><br>
+            <select id="itemCategory" name="itemCategory" required>
+                {% for category in item_categories %}
+                    <option value="{{ category }}">{{ category }}</option>
+                {% endfor %}
+            </select><br><br>
 
-        <label for="sellerLocation">موقع البائع:</label>
-        <input type="text" id="sellerLocation" name="sellerLocation" required>
+            <label for="itemCondition">حالة العنصر:</label><br>
+            <select id="itemCondition" name="itemCondition" required>
+                {% for condition in item_conditions %}
+                    <option value="{{ condition }}">{{ condition }}</option>
+                {% endfor %}
+            </select><br><br>
 
-        <label for="itemImage">صور العنصر (الصور فقط مسموحة):</label>
-        <input type="file" id="itemImage" name="itemImage" accept="image/*" multiple required>
+            <label for="sellerLocation">موقع البائع:</label><br>
+            <input type="text" id="sellerLocation" name="sellerLocation" required><br><br>
 
-        <button type="submit">إرسال العنصر</button>
-    </form>
-</body>
-</html>
+            <label for="itemImage">صور العنصر (الصور فقط مسموحة):</label><br>
+            <input type="file" id="itemImage" name="itemImage" accept="image/*" multiple required><br><br>
+
+            <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">إرسال العنصر</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -114,13 +114,12 @@ def auction_listing():
     now = datetime.now(timezone)
 
     # Fetch items from the database
-    items = Item.query.all()
+    items = Item.query.filter(Item.time_end > now).all()
 
     formatted_items = []
 
     # Format the fetched items into dictionaries
     for item in items:
-        item.delete_if_ended()  # Check and delete if the item has ended
         formatted_item = {
             'id': item.id,
             'name': item.name,
@@ -168,8 +167,8 @@ def item_details(item_id):
 
 @app.route('/form', methods=['GET', 'POST'])
 def item_form():
-    item_categories = ['Electronics', 'Furniture', 'Clothing']
-    item_conditions = ['New', 'Used', 'Like New']
+    item_categories = ['الكترونيات', 'أثاث', 'ملابس', 'سيارات']
+    item_conditions = ['جديد', 'مستعمل', 'كأنه جديد', 'سيء']
 
     if request.method == 'POST':
         # Process form submission here
