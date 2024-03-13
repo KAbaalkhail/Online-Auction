@@ -25,7 +25,11 @@
             <p>الفئة: {{ item.category }}</p>
             <p>الحالة: {{ item.condition }}</p>
             <p>الموقع: {{ item.location }}</p>
-            <!-- Removed the Place Bid button -->
+            <!-- Add the Bid button -->
+            <form action="{{ url_for('place_bid', item_id=item.id) }}" method="post">
+
+                <button type="submit">مزايدة</button>
+            </form>
             <a href="{{ url_for('item_details', item_id=item.id) }}">تفاصيل العنصر</a>
         </div>
     </div>
@@ -78,4 +82,3 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 {% endblock %}
-

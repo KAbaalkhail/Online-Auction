@@ -24,7 +24,6 @@ class User(db.Model):
     password = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.TIMESTAMP, server_default=db.func.current_timestamp(), nullable=False)
 
-# Define the Item model
 class Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
@@ -35,18 +34,21 @@ class Item(db.Model):
     condition = db.Column(db.String(50))
     location = db.Column(db.String(100))
     img = db.Column(db.String(255))
+    seller_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))  # Foreign key to User table
+    seller = db.relationship('User', foreign_keys=[seller_id], backref=db.backref('items_listed', lazy=True))  # Define relationship with User
+    buyer_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))  # Foreign key to User table
+    buyer = db.relationship('User', foreign_keys=[buyer_id], backref=db.backref('items_bought', lazy=True))
 
     def delete_if_ended(self):
         timezone = pytz.timezone('Asia/Riyadh')
         now = datetime.now(timezone)
 
-            # Make self.time_end aware by adding timezone information
+        # Make self.time_end aware by adding timezone information
         self.time_end = timezone.localize(self.time_end)
 
         if self.time_end < now - timedelta(minutes=1):
             db.session.delete(self)
             db.session.commit()
-
 
 @app.before_first_request
 def create_tables():
@@ -63,7 +65,7 @@ def login():
         password = request.form['password']
         user = User.query.filter_by(username=username).first()
         if user and check_password_hash(user.password, password):
-            session['username'] = user.username
+            session['user_id'] = user.user_id
             return redirect(url_for('dashboard'))  # Redirect to the dashboard page
         else:
             flash('Invalid username or password')
@@ -97,7 +99,7 @@ def register():
 
 @app.route('/main')
 def dashboard():
-    if 'username' in session:
+    if 'user_id' in session:
         return render_template('main.html')
     else:
         flash('Please log in to access the dashboard')
@@ -156,7 +158,6 @@ def auction_listing():
 
 @app.route('/item_details/<int:item_id>')
 def item_details(item_id):
-    print("Item ID:", item_id)  # Add debug print to check item_id
     # Fetch item details from the database using item_id
     item = Item.query.get(item_id)
     if not item:
@@ -164,6 +165,27 @@ def item_details(item_id):
         return redirect(url_for('auction_listing'))  # Redirect back to the auction listing page
     return render_template('item_details.html', item=item)
 
+@app.route('/place_bid/<int:item_id>', methods=['POST'])
+def place_bid(item_id):
+    if 'user_id' not in session:
+        flash('Please log in to bid on items')
+        return redirect(url_for('login'))
+
+    user_id = session['user_id']
+    item = Item.query.get(item_id)
+    if not item:
+        flash('Item not found')
+        return redirect(url_for('auction_listing'))
+
+    # Increment the bid by 50
+    item.start_bid += 50
+
+    # Associate the buyer's user ID with the item
+    item.buyer_id = user_id
+
+    db.session.commit()
+    flash('Bid placed successfully!')
+    return redirect(url_for('auction_listing'))
 
 @app.route('/form', methods=['GET', 'POST'])
 def item_form():
@@ -182,10 +204,18 @@ def item_form():
         # Save the uploaded image file to a directory or cloud storage and get the file path
         img = 'path_to_image'  # Replace 'path_to_image' with the actual file path
 
+        # Get the seller's ID from the session
+        if 'user_id' in session:
+            seller_id = session['user_id']
+        else:
+            flash('Please log in to add an item')
+            return redirect(url_for('login'))
+
         # Here, you should add code to store the form data in the database
         new_item = Item(name=name, description=description, start_bid=start_bid,
                         time_end=auction_end_time, category=category,
-                        condition=condition, location=location, img=img)
+                        condition=condition, location=location, img=img,
+                        seller_id=seller_id)  # Assign the seller's ID to the item
 
         # Add the new item to the database session
         db.session.add(new_item)

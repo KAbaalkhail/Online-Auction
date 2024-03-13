@@ -7,7 +7,10 @@
 
 {% block body %}
 <h1>{{ item.name }}</h1>
-<img src="{{ item.img }}" alt="{{ item.name }}">
 <p>{{ item.description }}</p>
-<!-- Add any additional item details here -->
+<p>المزايدة الابتدائية: ${{ item.start_bid }}</p>
+<p>الفئة: {{ item.category }}</p>
+<p>الحالة: {{ item.condition }}</p>
+<p>الموقع: {{ item.location }}</p>
+<p>وقت الانتهاء: {{ item.time_end }}</p>
 {% endblock %}

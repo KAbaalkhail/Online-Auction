@@ -19,5 +19,7 @@ CREATE TABLE IF NOT EXISTS items (
     item_condition VARCHAR(100) NOT NULL,
     seller_location VARCHAR(255) NOT NULL,
     item_image VARCHAR(255) NOT NULL,
+    buyer_id INT,
+    seller_id INT,  -- Add this column
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
