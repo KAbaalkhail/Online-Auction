@@ -3,14 +3,12 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Email, Length
 from flask_sqlalchemy import SQLAlchemy
-from flask_wtf.csrf import CSRFProtect
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import pytz
 from datetime import datetime, timedelta
 from flask_login import (LoginManager, UserMixin, login_user, logout_user,
                          current_user, login_required)
-
 
 # Create Flask app
 app = Flask(__name__)
@@ -20,15 +18,10 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-
-
-
 # Configure secret key for session
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or 'default-secret-key'
 app.config['SESSION_COOKIE_SECURE'] = False  # Set to True if you are using HTTPS
 app.config['REMEMBER_COOKIE_SECURE'] = False  # Set to True if you are using HTTPS
-csrf = CSRFProtect(app)
-
 
 # Configure database connection
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI') or \
@@ -110,7 +103,6 @@ def index():
     else:
         return redirect(url_for('login'))
 
-
 # Login route
 # Update login route
 @app.route('/login', methods=['GET', 'POST'])
@@ -132,8 +124,6 @@ def login():
         else:
             flash('اسم المستخدم أو كلمة المرور غير صحيحة. يرجى المحاولة مرة أخرى.', 'error')
     return render_template('login.html', form=form)
-
-
 
 # Registration route
 @app.route('/register', methods=['GET', 'POST'])
@@ -165,7 +155,6 @@ def register():
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-
 @app.route('/user_profile')
 def user_profile():
     if 'user_id' in session:
@@ -182,7 +171,6 @@ def logout():
     logout_user()  # Use Flask-Login to end user session
     flash('تم تسجيل الخروج بنجاح!', 'success')
     return redirect(url_for('index'))
-
 
 @app.route('/main')
 def dashboard():
@@ -202,7 +190,8 @@ def contactus():
 
 # Auction listing route
 # Auction listing route
-@app.route('/auction')
+# Auction listing route
+@app.route('/auctions')
 def auction_listing():
     if 'user_id' not in session:
         flash('Please log in to access the auctions page.', 'error')
@@ -252,6 +241,7 @@ def auction_listing():
 
     # Render the template with the fetched items
     return render_template('auction.html', categories=popular_categories, items=sorted_items)
+
 
 # Item details route
 @app.route('/item_details/<int:item_id>')
@@ -326,6 +316,7 @@ def item_form():
         return redirect(url_for('item_form'))
 
     return render_template('form.html', item_categories=item_categories, item_conditions=item_conditions)
+
 
 if __name__ == '__main__':
     app.run(debug=True)  # Turn off debug mode for production deployment
