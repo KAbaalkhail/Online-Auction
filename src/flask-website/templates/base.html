@@ -17,34 +17,98 @@
     {% block extra_head %}{% endblock %}
 </head>
 <body class="flex flex-col min-h-screen">
-    <!-- Header -->
-    <header>
-        <!-- Navbar -->
-        <nav class="bg-white shadow-md w-full">
-            <div class="max-w-screen-xl mx-auto px-4 py-2 flex justify-between items-center">
-                <!-- Registration link aligned with the navbar links -->
-                <div class="flex items-center">
-                    <a href="{{ url_for('login') }}" class="px-6 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">
-                        التسجيل
-                    </a>
-                </div>
-                <!-- Centered navbar links -->
-                <div class="flex-grow flex items-center justify-center">
-                    <ul class="flex flex-row space-x-8 font-medium">
-                        <li><a href="{{ url_for('contactus') }}" class="text-gray-900 hover:text-blue-700">تواصل معنا</a></li>
-                        <li><a href="{{ url_for('auction_listing') }}" class="text-gray-900 hover:text-blue-700">المزادات</a></li>
-                        <li><a href="{{ url_for('dashboard') }}" class="text-gray-900 hover:text-blue-700">الرئسية</a></li>
-                    </ul>
-                </div>
-                <!-- Logo aligned with the navbar links -->
-                <div class="flex items-center">
-                    <a href="{{ url_for('dashboard') }}">
-                        <img src="{{ url_for('static', filename='logo-new.png') }}" class="h-20 w-20" alt="Your Website Logo">
-                    </a>
+<!-- Header -->
+<header>
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md w-full">
+        <div class="max-w-screen-xl mx-auto px-4 py-2 flex justify-between items-center">
+<!-- Conditional display based on user login status -->
+{% if current_user.is_authenticated %}
+    <!-- User dropdown menu -->
+    <div class="relative">
+        <button id="user-dropdown" class="px-2 py-1 text-gray-900 rounded-full focus:outline-none focus:text-gray-700">
+            <i class="fas fa-user"></i> <!-- User icon -->
+        </button>
+        <div id="user-dropdown-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-300">
+            <a href="{{ url_for('user_profile') }}" class="block px-4 py-2 text-gray-800 hover:bg-blue-100">
+                الملف الشخصي
+            </a>
+            <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-gray-800 hover:bg-red-100">
+                الخروح
+            </a>
+        </div>
+    </div>
+{% else %}
+    <!-- Guest view -->
+    <div>
+        <a href="{{ url_for('login') }}" class="px-6 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">
+            تسجيل الدخول
+        </a>
+    </div>
+{% endif %}
+
+            <!-- Centered navbar links -->
+            <div class="flex-grow flex items-center justify-center">
+                <ul class="flex flex-row space-x-8 font-medium">
+                    <li><a href="{{ url_for('contactus') }}" class="text-gray-900 hover:text-blue-700">تواصل معنا</a></li>
+                    <li><a href="{{ url_for('auction_listing') }}" class="text-gray-900 hover:text-blue-700">المزادات</a></li>
+                    <li><a href="{{ url_for('dashboard') }}" class="text-gray-900 hover:text-blue-700">الرئيسية</a></li>
+                </ul>
+            </div>
+            <!-- Logo aligned with the navbar links -->
+            <div class="flex items-center">
+                <a href="{{ url_for('dashboard') }}">
+                    <img src="{{ url_for('static', filename='logo-new.png') }}" class="h-20 w-20" alt="Your Website Logo">
+                </a>
+            </div>
+        </div>
+    </nav>
+</header>
+
+
+    <!-- Flash message handling -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% set latest_message = messages[-1] %}
+            <div id="flash-message" class="bg-{{ latest_message[0] }}-100 border-t-4 border-{{ latest_message[0] }}-500 rounded-b text-{{ latest_message[0] }}-900 px-4 py-3 shadow-md fixed bottom-0 right-0 mr-4 mb-4" role="alert">
+                <div class="flex">
+                    <div class="py-1">
+                        {% if latest_message[0] == 'error' %}
+                            <i class="fas fa-exclamation-triangle"></i>
+                        {% elif latest_message[0] == 'success' %}
+                            <i class="fas fa-check-circle"></i>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <p class="font-bold">{{ latest_message[1] }}</p>
+                    </div>
+                    <div class="ml-auto">
+                        <button id="hide-flash" class="text-sm text-gray-500 hover:text-gray-700 focus:outline-none">إخفاء</button>
+                    </div>
                 </div>
             </div>
-        </nav>
-    </header>
+            <script>
+                // Auto-hide the flash message after 5 seconds
+                setTimeout(function() {
+                    var flashMessage = document.getElementById('flash-message');
+                    flashMessage.style.display = 'none';
+                }, 5000);
+
+                // Hide the flash message when the hide button is clicked
+                document.getElementById('hide-flash').addEventListener('click', function() {
+                    var flashMessage = document.getElementById('flash-message');
+                    flashMessage.style.display = 'none';
+                });
+
+                // Toggle the dropdown menu when the user icon is clicked
+                document.getElementById('user-dropdown').addEventListener('click', function() {
+                    var dropdownMenu = document.getElementById('user-dropdown-menu');
+                    dropdownMenu.classList.toggle('hidden');
+                });
+            </script>
+        {% endif %}
+    {% endwith %}
+
     <!-- Body content -->
     <main class="flex-grow">
         {% block body %}{% endblock %}
@@ -59,6 +123,21 @@
         </div>
     </footer>
     <!-- Include JavaScript libraries -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // This code runs after the DOM is loaded
+    var userDropdown = document.getElementById('user-dropdown');
+    var userDropdownMenu = document.getElementById('user-dropdown-menu');
+
+    if (userDropdown) {
+        userDropdown.addEventListener('click', function() {
+            userDropdownMenu.classList.toggle('hidden');
+        });
+    }
+});
+</script>
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
     {% block extra_scripts %}{% endblock %}
 </body>
