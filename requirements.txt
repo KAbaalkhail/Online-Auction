@@ -7,4 +7,4 @@ Werkzeug==2.2.2
 pytz==2022.1
 Flask-WTF==0.15.1
 Flask-Login==0.6.0
-email_validator
+email_validator==1.1.3

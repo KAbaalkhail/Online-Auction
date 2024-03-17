@@ -103,8 +103,8 @@ def index():
     else:
         return redirect(url_for('login'))
 
+
 # Login route
-# Update login route
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -118,12 +118,17 @@ def login():
         user = User.query.filter_by(username=username).first()
         if user and check_password_hash(user.password, password):
             login_user(user, remember=True)  # Correct placement of login_user
+
+            # Store user ID in session
+            session['user_id'] = user.user_id
+
             flash('تم تسجيل الدخول بنجاح!', 'success')
             next_page = request.args.get('next')
             return redirect(next_page or url_for('dashboard'))
         else:
             flash('اسم المستخدم أو كلمة المرور غير صحيحة. يرجى المحاولة مرة أخرى.', 'error')
     return render_template('login.html', form=form)
+
 
 # Registration route
 @app.route('/register', methods=['GET', 'POST'])
@@ -172,16 +177,13 @@ def logout():
     flash('تم تسجيل الخروج بنجاح!', 'success')
     return redirect(url_for('index'))
 
+# Dashboard route
 @app.route('/main')
+ # Use login_required decorator to protect this route
 def dashboard():
-    if 'user_id' in session:
-        user_id = session['user_id']
-        # Fetch user from database based on user_id
-        user = User.query.get(user_id)
-        return render_template('main.html', user=user)
-    else:
-        flash('Please log in to access this page.', 'error')
-        return redirect(url_for('login'))
+    # No need to check for 'user_id' in session
+    return render_template('main.html', user=current_user)
+
 
 # Contact us route
 @app.route('/contactus')
@@ -189,14 +191,9 @@ def contactus():
     return render_template('contactus.html')
 
 # Auction listing route
-# Auction listing route
-# Auction listing route
+
 @app.route('/auctions')
 def auction_listing():
-    if 'user_id' not in session:
-        flash('Please log in to access the auctions page.', 'error')
-        return redirect(url_for('login'))
-
     popular_categories = ['Mobile', 'Furniture', 'Cars']
     timezone = pytz.timezone('Asia/Riyadh')
     now = datetime.now(timezone)
@@ -255,11 +252,8 @@ def item_details(item_id):
 
 # Place bid route
 @app.route('/place_bid/<int:item_id>', methods=['POST'])
+@login_required
 def place_bid(item_id):
-    if 'user_id' not in session:
-        flash('Please log in to bid on items')
-        return redirect(url_for('login'))
-
     user_id = session['user_id']
     item = Item.query.get(item_id)
     if not item:
@@ -278,9 +272,12 @@ def place_bid(item_id):
 
 # Item form route
 @app.route('/form', methods=['GET', 'POST'])
+@login_required
 def item_form():
     item_categories = ['الكترونيات', 'أثاث', 'ملابس', 'سيارات']
     item_conditions = ['جديد', 'مستعمل', 'كأنه جديد', 'سيء']
+
+    print("Session Contents:", session)  # Print session contents for debugging
 
     if request.method == 'POST':
         # Process form submission here
@@ -298,7 +295,7 @@ def item_form():
         if 'user_id' in session:
             seller_id = session['user_id']
         else:
-            flash('Please log in to add an item')
+            flash('Please log in to add an item', 'error')
             return redirect(url_for('login'))
 
         # Here, you should add code to store the form data in the database
@@ -311,12 +308,11 @@ def item_form():
         db.session.add(new_item)
         db.session.commit()
 
-        flash('Item added successfully!')
+        flash('Item added successfully!', 'success')
         # Redirect to the same page after form submission
         return redirect(url_for('item_form'))
 
-    return render_template('form.html', item_categories=item_categories, item_conditions=item_conditions)
-
+    return render_template('main.html', item_categories=item_categories, item_conditions=item_conditions)
 
 if __name__ == '__main__':
     app.run(debug=True)  # Turn off debug mode for production deployment
