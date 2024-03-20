@@ -26,8 +26,9 @@
             <p>الحالة: {{ item.condition }}</p>
             <p>الموقع: {{ item.location }}</p>
             <!-- Add the Bid button -->
+            <!-- Add the Bid form -->
             <form action="{{ url_for('place_bid', item_id=item.id) }}" method="post">
-
+                <input type="number" name="bid_amount" placeholder="حط كم بتزود" required>
                 <button type="submit">مزايدة</button>
             </form>
             <a href="{{ url_for('item_details', item_id=item.id) }}">تفاصيل العنصر</a>

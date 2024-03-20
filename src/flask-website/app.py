@@ -260,14 +260,13 @@ def place_bid(item_id):
         flash('Item not found')
         return redirect(url_for('auction_listing'))
 
-    # Increment the bid by 50
-    item.start_bid += 50
-
-    # Associate the buyer's user ID with the item
+    bid_amount = float(request.form['bid_amount'])
     item.buyer_id = user_id
+    item.start_bid += bid_amount
 
     db.session.commit()
-    flash('Bid placed successfully!')
+
+    flash('تمت المزايدة بنجاح!', 'success')
     return redirect(url_for('auction_listing'))
 
 # Item form route
