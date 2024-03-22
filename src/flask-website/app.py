@@ -4,6 +4,7 @@ from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Email, Length
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 import os
 import pytz
 from datetime import datetime, timedelta
@@ -30,6 +31,21 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize SQLAlchemy
 db = SQLAlchemy(app)
+
+STATIC_FOLDER = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'static')
+
+# Configure the 'UPLOAD_FOLDER' to save uploaded images directly in the 'static' folder
+UPLOAD_FOLDER = STATIC_FOLDER
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}  # Specify the allowed file extensions
+
+# Ensure the 'static' directory exists
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+
+
 
 # Define the User model
 class User(UserMixin, db.Model):
@@ -202,7 +218,6 @@ def auction_listing():
     items = Item.query.filter(Item.time_end > now).all()
 
     formatted_items = []
-
     # Format the fetched items into dictionaries
     for item in items:
         formatted_item = {
@@ -233,10 +248,18 @@ def auction_listing():
             item['time_left'] = "Auction Ended"
         item['end_time_iso'] = end_time.isoformat()
 
-    # Sort the items by end time
-    sorted_items = sorted(formatted_items, key=lambda x: x['time_left'])
+    # Get sorting parameters from the request
+    sort_by = request.args.get('sort_by', 'time')  # Default sort by time
+    sort_order = request.args.get('sort_order', 'asc')  # Default sort order
 
-    # Render the template with the fetched items
+    if sort_by == 'price':
+        sorted_items = sorted(formatted_items, key=lambda x: x['start_bid'], reverse=(sort_order == 'desc'))
+    elif sort_by == 'location':
+        sorted_items = sorted(formatted_items, key=lambda x: x['location'], reverse=(sort_order == 'desc'))
+    elif sort_by == 'time':
+        sorted_items = sorted(formatted_items, key=lambda x: x['end_time_iso'], reverse=(sort_order == 'desc'))
+
+    # Render the template with the fetched and sorted items
     return render_template('auction.html', categories=popular_categories, items=sorted_items)
 
 
@@ -246,7 +269,7 @@ def item_details(item_id):
     # Fetch item details from the database using item_id
     item = Item.query.get(item_id)
     if not item:
-        flash("Item not found")
+        flash('العنصر غير موجود')
         return redirect(url_for('auction_listing'))  # Redirect back to the auction listing page
     return render_template('item_details.html', item=item)
 
@@ -257,7 +280,7 @@ def place_bid(item_id):
     user_id = session['user_id']
     item = Item.query.get(item_id)
     if not item:
-        flash('Item not found')
+        flash('العنصر غير موجود')
         return redirect(url_for('auction_listing'))
 
     bid_amount = float(request.form['bid_amount'])
@@ -269,17 +292,16 @@ def place_bid(item_id):
     flash('تمت المزايدة بنجاح!', 'success')
     return redirect(url_for('auction_listing'))
 
-# Item form route
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 @app.route('/form', methods=['GET', 'POST'])
-@login_required
 def item_form():
     item_categories = ['الكترونيات', 'أثاث', 'ملابس', 'سيارات']
     item_conditions = ['جديد', 'مستعمل', 'كأنه جديد', 'سيء']
 
-    print("Session Contents:", session)  # Print session contents for debugging
-
     if request.method == 'POST':
-        # Process form submission here
         name = request.form['itemName']
         description = request.form['itemDescription']
         start_bid = float(request.form['startingBid'])
@@ -287,31 +309,49 @@ def item_form():
         category = request.form['itemCategory']
         condition = request.form['itemCondition']
         location = request.form['sellerLocation']
-        # Save the uploaded image file to a directory or cloud storage and get the file path
-        img = 'path_to_image'  # Replace 'path_to_image' with the actual file path
 
-        # Get the seller's ID from the session
-        if 'user_id' in session:
-            seller_id = session['user_id']
-        else:
-            flash('Please log in to add an item', 'error')
-            return redirect(url_for('login'))
 
-        # Here, you should add code to store the form data in the database
-        new_item = Item(name=name, description=description, start_bid=start_bid,
-                        time_end=auction_end_time, category=category,
-                        condition=condition, location=location, img=img,
-                        seller_id=seller_id)  # Assign the seller's ID to the item
+        # Check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part', 'error')
+            return redirect(request.url)
 
-        # Add the new item to the database session
-        db.session.add(new_item)
-        db.session.commit()
+        file = request.files['file']
 
-        flash('Item added successfully!', 'success')
-        # Redirect to the same page after form submission
-        return redirect(url_for('item_form'))
+        # If the user does not select a file, the browser submits an empty file without a filename
+        if file.filename == '':
+            flash('No selected file', 'error')
+            return redirect(request.url)
 
-    return render_template('main.html', item_categories=item_categories, item_conditions=item_conditions)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(filepath)
+
+            # Save the relative image file path to the database
+            img = os.path.join('static', filename)
+
+            # Get the seller's ID from the session
+            if 'user_id' in session:
+                seller_id = session['user_id']
+            else:
+                flash('الرجاء تسجيل الدخول لإضافة إعلان ', 'error')
+                return redirect(url_for('login'))
+
+            new_item = Item(name=name, description=description, start_bid=start_bid,
+                            time_end=auction_end_time, category=category,
+                            condition=condition, location=location, img=img,
+                            seller_id=seller_id)
+
+            db.session.add(new_item)
+            db.session.commit()
+
+            flash('تمت إضافة العنصر بنجاح!', 'success')
+            return redirect(url_for('item_form'))
+
+    return render_template('form.html', item_categories=item_categories, item_conditions=item_conditions)
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)  # Turn off debug mode for production deployment
