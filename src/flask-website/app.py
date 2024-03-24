@@ -69,10 +69,10 @@ def load_user(user_id):
 
 # Define Flask forms
 class RegistrationForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired(), Length(min=4, max=20)])
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    submit = SubmitField('Register')
+    username = StringField('اسم المستخدم', validators=[DataRequired(), Length(min=4, max=20)])
+    email = StringField('البريد الالكتروني', validators=[DataRequired(), Email()])
+    password = PasswordField('كلمة المرور', validators=[DataRequired()])
+    submit = SubmitField('التسجيل')
 
 class LoginForm(FlaskForm):
     username = StringField('اسم المستخدم', validators=[DataRequired()])
@@ -91,20 +91,9 @@ class Item(db.Model):
     location = db.Column(db.String(100))
     img = db.Column(db.String(255))
     seller_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))  # Foreign key to User table
-    seller = db.relationship('User', foreign_keys=[seller_id], backref=db.backref('items_listed', lazy=True))  # Define relationship with User
+    seller = db.relationship('User', foreign_keys=[seller_id], backref=db.backref('items_sold', lazy=True))  # Define relationship with User
     buyer_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))  # Foreign key to User table
     buyer = db.relationship('User', foreign_keys=[buyer_id], backref=db.backref('items_bought', lazy=True))
-
-    def delete_if_ended(self):
-        timezone = pytz.timezone('Asia/Riyadh')
-        now = datetime.now(timezone)
-
-        # Make self.time_end aware by adding timezone information
-        self.time_end = timezone.localize(self.time_end)
-
-        if self.time_end < now - timedelta(minutes=1):
-            db.session.delete(self)
-            db.session.commit()
 
 # Create database tables before first request
 @app.before_first_request
@@ -200,21 +189,20 @@ def dashboard():
     # No need to check for 'user_id' in session
     return render_template('main.html', user=current_user)
 
-
 # Contact us route
 @app.route('/contactus')
 def contactus():
     return render_template('contactus.html')
 
+item_categories = ['الكترونيات', 'أثاث', 'ملابس', 'سيارات']
+item_conditions = ['جديد', 'مستعمل', 'كأنه جديد', 'سيء']
 # Auction listing route
 
 @app.route('/auctions')
 def auction_listing():
-    popular_categories = ['Mobile', 'Furniture', 'Cars']
+
     timezone = pytz.timezone('Asia/Riyadh')
     now = datetime.now(timezone)
-
-    # Fetch items from the database
     items = Item.query.filter(Item.time_end > now).all()
 
     formatted_items = []
@@ -260,7 +248,7 @@ def auction_listing():
         sorted_items = sorted(formatted_items, key=lambda x: x['end_time_iso'], reverse=(sort_order == 'desc'))
 
     # Render the template with the fetched and sorted items
-    return render_template('auction.html', categories=popular_categories, items=sorted_items)
+    return render_template('auction.html', categories=item_categories, items=sorted_items)
 
 
 # Item details route
@@ -282,8 +270,12 @@ def place_bid(item_id):
     if not item:
         flash('العنصر غير موجود')
         return redirect(url_for('auction_listing'))
-
+    
     bid_amount = float(request.form['bid_amount'])
+
+    if item.seller_id == user_id:  # Check if the buyer is the same as the seller
+        flash('لا يمكن للبائع المزايدة على العنصر الخاص به.')
+        return redirect(url_for('auction_listing'))
     item.buyer_id = user_id
     item.start_bid += bid_amount
 
@@ -298,8 +290,7 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 @app.route('/form', methods=['GET', 'POST'])
 def item_form():
-    item_categories = ['الكترونيات', 'أثاث', 'ملابس', 'سيارات']
-    item_conditions = ['جديد', 'مستعمل', 'كأنه جديد', 'سيء']
+
 
     if request.method == 'POST':
         name = request.form['itemName']
@@ -351,7 +342,45 @@ def item_form():
 
     return render_template('form.html', item_categories=item_categories, item_conditions=item_conditions)
 
+@app.route('/user')
+@login_required
+def user_details():
+    # Fetching items bought by the user
+    items_bought = current_user.items_bought
 
+    # Fetching items listed by the user
+    items_sold = current_user.items_sold
+
+    timezone = pytz.timezone('Asia/Riyadh')
+    now = datetime.now(timezone)
+
+    # Format the time left for each item bought by the user
+    for item in items_bought:
+        end_time = timezone.localize(item.time_end)
+        time_left = end_time - now
+        if time_left.total_seconds() > 0:
+            days = time_left.days
+            hours, remainder = divmod(time_left.seconds, 3600)
+            minutes, seconds = divmod(remainder, 60)
+            item.time_left = f"{days} days {hours} hours {minutes} minutes {seconds} seconds"
+        else:
+            item.time_left = "Auction Ended"
+        item.end_time_iso = end_time.isoformat()
+
+    # Format the time left for each item listed by the user
+    for item in items_sold:
+        end_time = timezone.localize(item.time_end)
+        time_left = end_time - now
+        if time_left.total_seconds() > 0:
+            days = time_left.days
+            hours, remainder = divmod(time_left.seconds, 3600)
+            minutes, seconds = divmod(remainder, 60)
+            item.time_left = f"{days} days {hours} hours {minutes} minutes {seconds} seconds"
+        else:
+            item.time_left = "Auction Ended"
+        item.end_time_iso = end_time.isoformat()
+
+    return render_template('user.html', items_bought=items_bought, items_sold=items_sold)
 
 if __name__ == '__main__':
     app.run(debug=True)  # Turn off debug mode for production deployment

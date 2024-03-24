@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}الصفحة الشخصية{% endblock %}
+
+{% block body %}
+<h1>المنتجات التي تم المزايدة عليها</h1>
+{% if items_bought %}
+  <ul>
+    {% for item in items_bought %}
+    <div class="auction-item" data-end-time="{{ item.end_time_iso }}">
+        <img src="{{ item.img }}" alt="{{ item.name }}">
+        <div class="auction-details">
+            <h3>{{ item.name }}</h3>
+            <p class="time-left">الوقت المتبقي: <span>{{ item.time_left }}</span></p>
+            <p>المزايدة الابتدائية: $<span class="start-bid">{{ item.start_bid }}</span></p>
+            <p>الفئة: {{ item.category }}</p>
+            <p>الحالة: {{ item.condition }}</p>
+            <p>الموقع: {{ item.location }}</p>
+            <a href="{{ url_for('item_details', item_id=item.id) }}">تفاصيل العنصر</a>
+        </div>
+    </div>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>لايوجد منتجات تم شرائها</p>
+{% endif %}
+
+<hr>
+
+<h1>المنتجات التي تم عرضها</h1>
+{% if items_sold %}
+  <ul>
+    {% for item in items_sold %}
+    <div class="auction-item" data-end-time="{{ item.end_time_iso }}">
+        <img src="{{ item.img }}" alt="{{ item.name }}">
+        <div class="auction-details">
+            <h3>{{ item.name }}</h3>
+            <p class="time-left">الوقت المتبقي: <span>{{ item.time_left }}</span></p>
+            <p>المزايدة الابتدائية: $<span class="start-bid">{{ item.start_bid }}</span></p>
+            <p>الفئة: {{ item.category }}</p>
+            <p>الحالة: {{ item.condition }}</p>
+            <p>الموقع: {{ item.location }}</p>
+            <a href="{{ url_for('item_details', item_id=item.id) }}">تفاصيل العنصر</a>
+        </div>
+    </div>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>لا يوجد منتجات تم بيعها.</p>
+{% endif %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function updateAuctionTimes() {
+        var items = document.querySelectorAll('.auction-item');
+        items.forEach(function(item) {
+            var endTime = new Date(item.getAttribute('data-end-time'));
+            var now = new Date();
+            var timeLeft = endTime - now;
+
+            // Check if the auction has ended
+            if (timeLeft <= 0) {
+                var display = item.querySelector('.time-left span');
+                if (display) {
+                    display.textContent = "المزاد انتهى";
+                }
+            } else {
+                // Calculate the remaining time
+                var seconds = Math.floor(timeLeft / 1000);
+                var minutes = Math.floor(seconds / 60);
+                var hours = Math.floor(minutes / 60);
+                var days = Math.floor(hours / 24);
+
+                hours %= 24;
+                minutes %= 60;
+                seconds %= 60;
+
+                var timeString = '';
+                if (days > 0) {
+                    timeString += days + ' يوم ';
+                }
+                if (hours > 0) {
+                    timeString += hours + ' ساعة ';
+                }
+                if (minutes > 0) {
+                    timeString += minutes + ' دقيقة ';
+                }
+                if (seconds > 0) {
+                    timeString += seconds + ' ثانية';
+                }
+
+                // Update the display with the remaining time
+                var display = item.querySelector('.time-left span');
+                if (display) {
+                    display.textContent = timeString;
+                }
+            }
+        });
+    }
+
+    // Update auction times initially
+    updateAuctionTimes();
+
+    // Update auction times every second
+    setInterval(updateAuctionTimes, 1000);
+});
+</script>
+{% endblock %}
