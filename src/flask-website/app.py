@@ -69,10 +69,10 @@ def load_user(user_id):
 
 # Define Flask forms
 class RegistrationForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired(), Length(min=4, max=20)])
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    submit = SubmitField('Register')
+    username = StringField('اسم المستخدم', validators=[DataRequired(), Length(min=4, max=20)])
+    email = StringField('البريد الالكتروني', validators=[DataRequired(), Email()])
+    password = PasswordField('كلمة المرور', validators=[DataRequired()])
+    submit = SubmitField('التسجيل')
 
 class LoginForm(FlaskForm):
     username = StringField('اسم المستخدم', validators=[DataRequired()])
