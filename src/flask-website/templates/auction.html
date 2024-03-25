@@ -12,7 +12,7 @@
     <a href="#{{ category }}">{{ category }}</a>
     {% endfor %}
 </nav>
-<div class="main-body">
+<div class="main-item">
     <!-- العناصر المدرجة حسب الوقت المتبقي -->
         {% for item in items %}
         <div class="auction-item" data-end-time="{{ item.end_time_iso }}">

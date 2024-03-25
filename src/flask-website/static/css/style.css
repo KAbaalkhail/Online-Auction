@@ -5,6 +5,14 @@ body, html {
 }
 .main-body {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100vh; /* Use min-height instead of height for better flexibility */
+    color: black; /* Text color */
+}
+.main-item {
+    display: flex;
     flex-wrap: wrap;
     
 }
