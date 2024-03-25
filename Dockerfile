@@ -8,6 +8,9 @@ ENV TZ=Asia/Riyadh
 RUN apt-get update && apt-get install -y tzdata && \
     ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && dpkg-reconfigure -f noninteractive tzdata
 
+# Install entr
+RUN apt-get update && apt-get install -y entr
+
 # Set the working directory in the container
 WORKDIR /app
 
@@ -23,9 +26,10 @@ COPY src/flask-website/ .
 # Make port 5000 available to the world outside this container
 EXPOSE 5000
 
-# Define environment variable for the Flask application
+# Define environment variables for the Flask application
 ENV FLASK_APP=app.py
 ENV FLASK_RUN_HOST=0.0.0.0
+ENV FLASK_ENV=development
 
-# Run the Flask app
+# Run the Flask app with entr (note: in development mode, Flask automatically reloads)
 CMD ["flask", "run"]

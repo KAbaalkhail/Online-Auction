@@ -7,12 +7,13 @@ services:
     environment:
       - FLASK_APP=src/flask-website/app.py
       - FLASK_RUN_HOST=0.0.0.0
+      - FLASK_ENV=development
       - HOSTNAME=db
       - SCHEMA=mydatabase          # Update to match your database name
       - MYSQL_USER=user            # Update to match your database user
       - MYSQL_PASSWORD=password    # Update to match your database password
       - SQLALCHEMY_DATABASE_URI=mysql+pymysql://user:password@db/mydatabase   # Update URI accordingly
-      - TZ = Asia/Riyadh
+      - TZ=Asia/Riyadh
     depends_on:
       - db
     volumes:
