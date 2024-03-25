@@ -3,17 +3,19 @@ body, html {
     margin: 0;
     background-color: #e9ecef; /* Background color changed to light grey */
 }
-
 .main-body {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    min-height: 100vh; /* Use min-height instead of height for better flexibility */
-    color: black; /* Text color */
+    flex-wrap: wrap;
+    
+}
+
+.auction-item {
+    margin-right: 10px;
+    border: 3px solid black;
 }
 
 .main-body h1 {
+
     font-size: 4rem; /* Large text */
     font-weight: bold;
     text-align: center;

@@ -12,29 +12,29 @@
     <a href="#{{ category }}">{{ category }}</a>
     {% endfor %}
 </nav>
-
 <div class="main-body">
     <!-- العناصر المدرجة حسب الوقت المتبقي -->
-    {% for item in items %}
-    <div class="auction-item" data-end-time="{{ item.end_time_iso }}">
-        <img src="{{ item.img }}" alt="{{ item.name }}">
-        <div class="auction-details">
-            <h3>{{ item.name }}</h3>
-            <p class="time-left">الوقت المتبقي: <span>{{ item.time_left }}</span></p>
-            <p>المزايدة الابتدائية: $<span class="start-bid">{{ item.start_bid }}</span></p>
-            <p>الفئة: {{ item.category }}</p>
-            <p>الحالة: {{ item.condition }}</p>
-            <p>الموقع: {{ item.location }}</p>
-            <!-- Add the Bid button -->
-            <!-- Add the Bid form -->
-            <form action="{{ url_for('place_bid', item_id=item.id) }}" method="post">
-                <input type="number" name="bid_amount" placeholder="حط كم بتزود" required>
-                <button type="submit">مزايدة</button>
-            </form>
-            <a href="{{ url_for('item_details', item_id=item.id) }}">تفاصيل العنصر</a>
+        {% for item in items %}
+        <div class="auction-item" data-end-time="{{ item.end_time_iso }}">
+            <img src="{{ item.img }}" alt="{{ item.name }}">
+            <div class="auction-details">
+                <h3>{{ item.name }}</h3>
+                <p class="time-left">الوقت المتبقي: <span>{{ item.time_left }}</span></p>
+                <p>المزايدة الابتدائية: $<span class="start-bid">{{ item.start_bid }}</span></p>
+                <p>الفئة: {{ item.category }}</p>
+                <p>الحالة: {{ item.condition }}</p>
+                <p>الموقع: {{ item.location }}</p>
+                <!-- Add the Bid button -->
+                <!-- Add the Bid form -->
+                <form action="{{ url_for('place_bid', item_id=item.id) }}" method="post">
+                    <input type="number" name="bid_amount" placeholder="حط كم بتزود" required>
+                    <button type="submit">مزايدة</button>
+                </form>
+                <a href="{{ url_for('item_details', item_id=item.id) }}">تفاصيل العنصر</a>
+            </div>
         </div>
+        {% endfor %}
     </div>
-    {% endfor %}
 </div>
 {% endblock %}
 {% block extra_scripts %}
