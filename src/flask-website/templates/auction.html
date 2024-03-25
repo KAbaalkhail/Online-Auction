@@ -16,7 +16,7 @@
     <!-- العناصر المدرجة حسب الوقت المتبقي -->
         {% for item in items %}
         <div class="auction-item" data-end-time="{{ item.end_time_iso }}">
-            <img src="{{ item.img }}" alt="{{ item.name }}">
+            <img src="{{ item.img }}" alt="{{ item.name }}" class="img-item">
             <div class="auction-details">
                 <h3>{{ item.name }}</h3>
                 <p class="time-left">الوقت المتبقي: <span>{{ item.time_left }}</span></p>

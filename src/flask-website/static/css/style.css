@@ -16,6 +16,12 @@ body, html {
     flex-wrap: wrap;
     
 }
+.img-item {
+    float: left;
+    width:  300px;
+    height: 220px;
+
+}
 
 .auction-item {
     margin-right: 10px;
