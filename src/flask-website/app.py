@@ -196,6 +196,7 @@ def contactus():
 
 item_categories = ['الكترونيات', 'أثاث', 'ملابس', 'سيارات']
 item_conditions = ['جديد', 'مستعمل', 'كأنه جديد', 'سيء']
+seller_locations = ['الرياض', 'القصيم', 'الشرقية']
 # Auction listing route
 
 @app.route('/auctions')
@@ -270,7 +271,7 @@ def place_bid(item_id):
     if not item:
         flash('العنصر غير موجود')
         return redirect(url_for('auction_listing'))
-    
+
     bid_amount = float(request.form['bid_amount'])
 
     if item.seller_id == user_id:  # Check if the buyer is the same as the seller
@@ -296,11 +297,12 @@ def item_form():
         name = request.form['itemName']
         description = request.form['itemDescription']
         start_bid = float(request.form['startingBid'])
-        auction_end_time = datetime.strptime(request.form['auctionEndTime'], '%Y-%m-%dT%H:%M')
+        auction_end_hours = int(request.form['auctionEndTime'])  # Extract the number of hours
         category = request.form['itemCategory']
         condition = request.form['itemCondition']
         location = request.form['sellerLocation']
 
+        auction_end_time = datetime.now() + timedelta(hours=auction_end_hours)
 
         # Check if the post request has the file part
         if 'file' not in request.files:
@@ -340,8 +342,8 @@ def item_form():
             flash('تمت إضافة العنصر بنجاح!', 'success')
             return redirect(url_for('item_form'))
 
-    return render_template('form.html', item_categories=item_categories, item_conditions=item_conditions)
-
+    return render_template('form.html', item_categories=item_categories, item_conditions=item_conditions,
+                           seller_locations=seller_locations)
 @app.route('/user')
 @login_required
 def user_details():
