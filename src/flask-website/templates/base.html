@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     {% block extra_head %}{% endblock %}
 </head>
-<body class="flex flex-col min-h-screen">
+<body class="flex flex-col min-h-screen" {% block body_attributes %}{% endblock %}>
 <!-- Header -->
 <header>
     <!-- Navbar -->
@@ -50,7 +50,6 @@
         </a>
     </div>
 {% endif %}
-
             <!-- Centered navbar links -->
             <div class="flex-grow flex items-center justify-center">
                 <ul class="flex flex-row space-x-8 font-medium">

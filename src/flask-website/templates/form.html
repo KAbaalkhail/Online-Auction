@@ -2,45 +2,63 @@
 
 {% block title %}إضافة عنصر للمزاد{% endblock %}
 
+
+
 {% block body %}
-<div class="flex justify-center items-center h-full">
-    <div class="w-full max-w-md" dir="rtl"> <!-- Added dir="rtl" -->
-        <h2 class="text-center mb-4">إضافة عنصر للمزاد</h2>
+<div class="flex justify-center items-center bg-gray-100 form-page py-8"> <!-- Removed h-screen and added py-8 for padding -->
+    <div class="w-full max-w-lg px-5 py-10 bg-white rounded shadow-xl" dir="rtl">
+        <h2 class="text-2xl font-semibold text-center text-gray-700 mb-6">إضافة عنصر للمزاد</h2>
 
-        <form action="/form" method="post" enctype="multipart/form-data">
-            <label for="itemName">اسم العنصر:</label><br>
-            <input type="text" id="itemName" name="itemName" required><br><br>
+        <form action="/form" method="post" enctype="multipart/form-data" class="space-y-4">
+            <div>
+                <label for="itemName" class="text-gray-600">اسم العنصر:</label>
+                <input type="text" id="itemName" name="itemName" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required>
+            </div>
 
-            <label for="itemDescription">وصف العنصر:</label><br>
-            <textarea id="itemDescription" name="itemDescription" rows="4" required></textarea><br><br>
+            <div>
+                <label for="itemDescription" class="text-gray-600">وصف العنصر:</label>
+                <textarea id="itemDescription" name="itemDescription" rows="4" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required></textarea>
+            </div>
 
-            <label for="startingBid">المزايدة الابتدائية (بالريال):</label><br>
-            <input type="number" id="startingBid" name="startingBid" min="0" required><br><br>
+            <div>
+                <label for="startingBid" class="text-gray-600">المزايدة الابتدائية (بالريال):</label>
+                <input type="number" id="startingBid" name="startingBid" min="0" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required>
+            </div>
 
-            <label for="auctionEndTime">وقت انتهاء المزاد:</label><br>
-            <input type="datetime-local" id="auctionEndTime" name="auctionEndTime" required><br><br>
+            <div>
+                <label for="auctionEndTime" class="text-gray-600">وقت انتهاء المزاد:</label>
+                <input type="datetime-local" id="auctionEndTime" name="auctionEndTime" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required>
+            </div>
 
-            <label for="itemCategory">فئة العنصر:</label><br>
-            <select id="itemCategory" name="itemCategory" required>
-                {% for category in item_categories %}
-                    <option value="{{ category }}">{{ category }}</option>
-                {% endfor %}
-            </select><br><br>
+            <div>
+                <label for="itemCategory" class="text-gray-600">فئة العنصر:</label>
+                <select id="itemCategory" name="itemCategory" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required>
+                    {% for category in item_categories %}
+                        <option value="{{ category }}">{{ category }}</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-            <label for="itemCondition">حالة العنصر:</label><br>
-            <select id="itemCondition" name="itemCondition" required>
-                {% for condition in item_conditions %}
-                    <option value="{{ condition }}">{{ condition }}</option>
-                {% endfor %}
-            </select><br><br>
+            <div>
+                <label for="itemCondition" class="text-gray-600">حالة العنصر:</label>
+                <select id="itemCondition" name="itemCondition" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required>
+                    {% for condition in item_conditions %}
+                        <option value="{{ condition }}">{{ condition }}</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-            <label for="sellerLocation">موقع البائع:</label><br>
-            <input type="text" id="sellerLocation" name="sellerLocation" required><br><br>
+            <div>
+                <label for="sellerLocation" class="text-gray-600">موقع البائع:</label>
+                <input type="text" id="sellerLocation" name="sellerLocation" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required>
+            </div>
 
-            <label for="itemImage">صور العنصر (الصور فقط مسموحة):</label><br>
-            <input type="file" id="itemImage" name="file" accept="image/*" multiple required><br><br>
+            <div>
+                <label for="itemImage" class="text-gray-600">صور العنصر (الصور فقط مسموحة):</label>
+                <input type="file" id="itemImage" name="file" accept="image/*" multiple class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required>
+            </div>
 
-            <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">إرسال العنصر</button>
+            <button type="submit" class="w-full text-white bg-blue-500 py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300">إرسال العنصر</button>
         </form>
     </div>
 </div>

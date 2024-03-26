@@ -1,17 +1,31 @@
 {% extends 'base.html' %}
+{% block body_attributes %}class="rtl-page"{% endblock %}
 {% block title %}قوائم المزادات{% endblock %}
 
 {% block extra_head %}
-    <!-- يمكن وضع المحتوى الإضافي لرأس الصفحة المحدد لصفحة المزاد هنا -->
+
 {% endblock %}
 
 {% block body %}
-<!-- قائمة الفئات المستقلة -->
-<nav class="category-listing">
-    {% for category in categories %}
-    <a href="#{{ category }}">{{ category }}</a>
-    {% endfor %}
-</nav>
+
+<!-- Sorting Bar -->
+<div class="sorting-bar">
+    <form action="{{ url_for('auction_listing') }}" method="get" class="sort-form">
+        <label for="sort_by">ترتيب حسب:</label>
+        <select name="sort_by" id="sort_by" class="form-control">
+            <option value="time">الوقت</option>
+            <option value="price">السعر</option>
+            <option value="location">الموقع</option>
+        </select>
+        <label for="sort_order">الترتيب:</label>
+        <select name="sort_order" id="sort_order" class="form-control">
+            <option value="asc">الاعلى الى الاقل</option>
+            <option value="desc">الاقل الى الاعلى</option>
+        </select>
+        <button type="submit" class="btn btn-primary">فرز</button>
+    </form>
+</div>
+
 <div class="main-item">
     <!-- العناصر المدرجة حسب الوقت المتبقي -->
         {% for item in items %}

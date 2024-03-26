@@ -2,6 +2,7 @@
 body, html {
     margin: 0;
     background-color: #e9ecef; /* Background color changed to light grey */
+
 }
 .main-body {
     display: flex;
@@ -13,20 +14,153 @@ body, html {
 }
 .main-item {
     display: flex;
+    flex-direction: row; /* Ensure the main container has a row direction */
     flex-wrap: wrap;
-    
+    justify-content: flex-end; /* Align items to the right */
 }
 .img-item {
     float: left;
     width:  300px;
     height: 220px;
-
+    direction: ltr;
 }
 
 .auction-item {
-    margin-right: 10px;
-    border: 3px solid black;
+    border: 1px solid #ddd; /* subtler border */
+    padding: 15px;
+    margin-bottom: 15px; /* space between auction items */
+    background-color: #fff; /* light background for the item */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* subtle shadow for depth */
+    border-radius: 5px; /* rounded corners */
+    overflow: hidden; /* ensures content fits nicely */
+    position: relative; /* Needed for absolute positioning of children */
+    padding-right: 15px; /* Adjusted for RTL */
+    padding-left: 15px; /* Adjusted for RTL */
+    direction: rtl;
 }
+
+.auction-details h3 {
+    font-family: 'Arial', sans-serif; /* Change as needed */
+    font-size: 1.2rem; /* Larger font size */
+    font-weight: bold; /* Bold font weight */
+    color: #333; /* Dark color for the text */
+    margin-bottom: 10px; /* Space below the title */
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2); /* Text shadow for depth */
+    padding-right: 10px; /* Right padding for RTL alignment */
+    display: inline-block; /* To wrap the background */
+    border-radius: 5px; /* Rounded corners */
+    transition: all 0.3s ease; /* Transition for hover effect */
+}
+
+.auction-details h3:hover {
+    transform: translateX(-5px); /* Shift to the left on hover */
+}
+
+
+
+  .time-left {
+    font-weight: bold;
+    color: #d9534f; /* a color that indicates urgency */
+  }
+
+  .auction-details h3 {
+    color: #333; /* darker color for better readability */
+    margin-bottom: 5px; /* space after title */
+}
+
+  form {
+    display: flex;
+    gap: 10px; /* space between form elements */
+    margin-top: 10px; /* space above the form */
+  }
+
+  form input[type="number"] {
+    flex-grow: 1; /* input field takes available space */
+    padding: 10px; /* larger click area and readability */
+    border: 1px solid #ccc; /* subtle border */
+    border-radius: 4px; /* rounded corners */
+  }
+
+  form button {
+    padding: 10px 20px; /* responsive padding */
+    background-color: #5cb85c; /* bootstrap success color */
+    color: white; /* text color */
+    border: none; /* remove default border */
+    border-radius: 4px; /* rounded corners */
+    cursor: pointer; /* indicates an interactive element */
+  }
+
+  .auction-item a {
+    display: inline-block; /* ensures proper spacing */
+    margin-top: 10px; /* space above link */
+    color: #0275d8; /* bootstrap primary color */
+    text-decoration: none; /* no underline */
+    padding: 5px 0; /* padding for clickable area */
+  }
+
+/* Subtle hover effect to raise the box */
+.auction-item:hover {
+    transform: translateX(-5px); /* Move the box up slightly on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+}
+
+/* Pseudo-element for additional visual flair, like a ribbon or a tag */
+.auction-item::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    right: -10px;
+    width: 50px;
+    height: 50px;
+    background-color: #ffcc00; /* Example color for the ribbon/tag */
+    clip-path: polygon(0 0, 100% 0%, 50% 100%, 0% 100%); /* Clip path for a ribbon shape */
+    transition: opacity 0.3s ease;
+    opacity: 0; /* Hidden by default */
+}
+
+
+
+/* Styling for the item title, making it more pronounced */
+.auction-item h2 {
+    font-size: 1.5rem; /* Increased font size for the title */
+    font-weight: 600; /* Semi-bold weight */
+    margin-bottom: 1rem; /* More space below the title */
+}
+
+/* Enhance the look of the item details for better readability */
+.item-details {
+    font-size: 0.9rem; /* Smaller font size for details */
+    color: #666; /* Lighter text color for details */
+    line-height: 1.4; /* Increased line height for better readability */
+    margin-bottom: 1rem; /* Space before the next section */
+}
+
+/* Style for the 'Bid Now' button */
+.bid-button {
+    background-color: #007bff; /* Bootstrap primary blue */
+    color: white; /* White text for contrast */
+    padding: 10px 20px; /* Padding for a larger clickable area */
+    text-align: center; /* Center the text inside */
+    display: inline-block; /* Allow it to sit inline with other elements */
+    border-radius: 5px; /* Rounded corners for the button */
+    transition: background-color 0.3s ease; /* Transition for a smooth color change on hover */
+    text-decoration: none; /* Remove underline from links */
+}
+
+/* Hover effect for the 'Bid Now' button */
+.bid-button:hover {
+    background-color: #0056b3; /* Darken the button color on hover for feedback */
+    text-decoration: none; /* Ensure no underline on hover */
+    color: white; /* Maintain white text color on hover */
+}
+
+/* Ensure that elements clear the floating image item */
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
 
 .main-body h1 {
 
@@ -66,3 +200,142 @@ body, html {
     color: blue; /* Arrow color */
     font-size: 24px; /* Arrow size */
 }
+
+
+
+.sorting-bar {
+    display: flex; /* Use flexbox for layout */
+    align-items: center; /* Vertically center align items */
+    justify-content: center; /* Horizontally center the content */
+    background-color: #f8f9fa; /* Light background for the sorting bar */
+    padding: 10px; /* Padding around the content */
+    border-radius: 5px; /* Rounded corners for the bar */
+    margin-bottom: 20px; /* Space below the bar */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    font-family: 'Arial', sans-serif; /* Optional: set the font */
+}
+
+.sort-form label, .sort-form select, .sort-form button {
+    margin-left: 5px;
+    margin-right: 5px;
+    /* Additional styling as needed */
+}
+
+.sort-form, .auction-details {
+    direction: rtl; /* Right to left layout */
+    text-align: right; /* Align text to the right */
+}
+
+/* You can add more specific styles to any other text elements that need RTL */
+.time-left, .auction-details h3, .auction-details p {
+    direction: rtl; /* Right to left layout */
+    text-align: right; /* Align text to the right */
+}
+
+.sort-form {
+    display: flex; /* Use flexbox for layout */
+    align-items: center; /* Center align form items */
+    gap: 15px; /* Space between form items */
+}
+
+.sort-form label {
+    margin: 0; /* Reset margin for labels */
+    font-size: 1rem; /* Set font size for labels */
+    color: #333; /* Set font color for labels */
+}
+
+.sort-form select {
+    padding: 5px 10px; /* Padding inside the dropdown */
+    border: 1px solid #ccc; /* Subtle border for the dropdown */
+    border-radius: 4px; /* Rounded corners for the dropdown */
+    font-size: 1rem; /* Set font size for select */
+}
+
+.sort-form button {
+    padding: 5px 15px; /* Padding for button */
+    background-color: #28a745; /* Green background for the button */
+    color: white; /* White text for the button */
+    border: none; /* Remove border */
+    border-radius: 4px; /* Rounded corners for the button */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-size: 1rem; /* Set font size for button */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    transition: background-color 0.2s; /* Transition for hover effect */
+}
+
+.sort-form button:hover {
+    background-color: #218838; /* Darken button on hover */
+}
+
+body.rtl-page, .rtl-page .sort-form {
+    direction: rtl !important; /* Right to left layout */
+    text-align: right !important; /* Align text to the right */
+}
+
+
+
+
+/* Specific styles for the form page */
+.form-page .form-container {
+    background-color: #ffffff; /* White background */
+    padding: 2rem; /* Padding around the form */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    max-width: 500px; /* Maximum width of form */
+    margin: 2rem auto; /* Center form in the view */
+}
+
+.form-page .form-container h2 {
+    font-size: 1.75rem; /* Larger font size for the title */
+    color: #333333; /* Dark color for the text */
+    margin-bottom: 1rem; /* Space below the title */
+    text-align: center; /* Center align the title */
+}
+
+.form-page form {
+    display: grid; /* Use grid for form layout */
+    grid-gap: 1rem; /* Space between form elements */
+    direction: rtl; /* Right-to-left direction */
+}
+
+.form-page form label {
+    font-size: 1rem; /* Font size for labels */
+    color: #555555; /* Slightly darker color for text for readability */
+}
+
+.form-page form input,
+.form-page form textarea,
+.form-page form select {
+    padding: 0.5rem; /* Padding inside inputs */
+    border: 1px solid #dddddd; /* Subtle border */
+    border-radius: 4px; /* Rounded corners for inputs */
+    font-size: 1rem; /* Font size for input text */
+}
+
+/* Styling for a button with a primary action */
+.form-page form button {
+    padding: 0.75rem 1.5rem; /* Larger padding for a button */
+    background-color: #007bff; /* Bootstrap primary color */
+    color: white; /* White text on button */
+    border: none; /* No border */
+    border-radius: 4px; /* Rounded corners */
+    font-weight: bold; /* Bold text */
+    cursor: pointer; /* Pointer cursor on hover */
+    text-transform: uppercase; /* Uppercase text for the button */
+    transition: background-color 0.3s ease; /* Transition for background color */
+}
+
+.form-page form button:hover {
+    background-color: #0056b3; /* Darken the button color on hover */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .form-page .form-container {
+        padding: 1rem; /* Less padding on smaller screens */
+        margin: 1rem; /* Less margin on smaller screens */
+    }
+}
+
+
+

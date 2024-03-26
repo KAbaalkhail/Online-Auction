@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
-
+{% block body_attributes %}class="form-page rtl-page"{% endblock %}
 {% block title %}الصفحة الشخصية{% endblock %}
+<style>
 
+</style>
 {% block body %}
 <h1>المنتجات التي تم المزايدة عليها</h1>
 {% if items_bought %}
