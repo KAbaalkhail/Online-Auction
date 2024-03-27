@@ -2,76 +2,41 @@
 
 {% block title %}التسجيل{% endblock %}
 
-{% block extra_head %}
-    <style>
-        /* Add your custom styles here */
-        form {
-            max-width: 400px;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-        }
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-        input[type="text"],
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            direction: rtl; /* Right-to-left direction */
-        }
-        button[type="submit"] {
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-        button[type="submit"]:hover {
-            background-color: #0056b3;
-        }
-        p {
-            margin-top: 20px;
-            text-align: center;
-        }
-        a {
-            color: #007bff;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
-{% endblock %}
-
 {% block body %}
-    <form method="POST">
-        {{ form.hidden_tag() }}
-        <div class="form-group">
-            {{ form.username.label }}
-            {{ form.username(class="form-control") }}
-        </div>
-        <div class="form-group">
-            {{ form.email.label }}
-            {{ form.email(class="form-control") }}
-        </div>
-        <div class="form-group">
-            {{ form.password.label }}
-            {{ form.password(class="form-control") }}
-        </div>
-        <div class="form-group">
-            {{ form.submit(class="btn btn-primary") }}
-        </div>
-    </form>
-    <p>هل لديك حساب بالفعل؟ <a href="{{ url_for('login') }}">سجل الدخول هنا</a>.</p>
+<div class="register-page">
+    <div class="form-container">
+        <h2 class="text-center mb-4">التسجيل</h2>
+        <form method="POST" class="register-form">
+            {{ form.hidden_tag() }}
+            <div class="register-field">
+                <div class="form-label">
+                    {{ form.username.label }}
+                </div>
+                <div class="form-input">
+                    {{ form.username(class="form-control") }}
+                </div>
+            </div>
+            <div class="register-field">
+                <div class="form-label">
+                    {{ form.email.label }}
+                </div>
+                <div class="form-input">
+                    {{ form.email(class="form-control") }}
+                </div>
+            </div>
+            <div class="register-field">
+                <div class="form-label">
+                    {{ form.password.label }}
+                </div>
+                <div class="form-input">
+                    {{ form.password(class="form-control") }}
+                </div>
+            </div>
+            <div class="register-action">
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
+        <p class="alternate-action">هل لديك حساب بالفعل؟ <a href="{{ url_for('login') }}">سجل الدخول هنا</a>.</p>
+    </div>
+</div>
 {% endblock %}

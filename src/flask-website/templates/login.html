@@ -2,63 +2,10 @@
 
 {% block title %}تسجيل الدخول{% endblock %}
 
-{% block extra_head %}
-    <style>
-        /* Add your custom styles here */
-        form {
-            max-width: 400px;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-            direction: rtl; /* Right-to-left direction */
-        }
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-        input[type="text"],
-        input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-        }
-        button[type="submit"] {
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-        button[type="submit"]:hover {
-            background-color: #0056b3;
-        }
-        p {
-            margin-top: 20px;
-            text-align: center;
-            direction: rtl; /* Right-to-left direction */
-        }
-        .error {
-            color: red;
-            margin-bottom: 10px;
-        }
-        a {
-            color: #007bff;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
-{% endblock %}
-
 {% block body %}
+<div class="login-page">
+    <div class="form-container">
+    <div class="login-action">
     <form method="POST">
         {{ form.hidden_tag() }}
         {% if form.errors %}
@@ -70,17 +17,19 @@
                 {% endfor %}
             </div>
         {% endif %}
-        <div class="form-group">
+        <div class="login-field">
             {{ form.username.label(class="form-control-label") }}
             {{ form.username(class="form-control form-control-lg") }}
         </div>
-        <div class="form-group">
+        <div class="login-field">
             {{ form.password.label(class="form-control-label") }}
             {{ form.password(class="form-control form-control-lg") }}
         </div>
-        <div class="form-group">
+        <div class="login-action">
             {{ form.submit(class="btn btn-primary btn-lg") }}
         </div>
     </form>
     <p>ليس لديك حساب؟ <a href="{{ url_for('register') }}">سجل هنا</a>.</p>
+</div>
+
 {% endblock %}
