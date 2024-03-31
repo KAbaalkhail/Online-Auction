@@ -7,48 +7,81 @@
 {% endblock %}
 
 {% block body %}
-
-<!-- Sorting Bar -->
-<div class="sorting-bar">
-    <form action="{{ url_for('auction_listing') }}" method="get" class="sort-form">
-        <label for="sort_by">ترتيب حسب:</label>
-        <select name="sort_by" id="sort_by" class="form-control">
-            <option value="time">الوقت</option>
-            <option value="price">السعر</option>
-            <option value="location">الموقع</option>
-        </select>
-        <label for="sort_order">الترتيب:</label>
-        <select name="sort_order" id="sort_order" class="form-control">
-            <option value="asc">الاعلى الى الاقل</option>
-            <option value="desc">الاقل الى الاعلى</option>
-        </select>
-        <button type="submit" class="btn btn-primary">فرز</button>
+<!-- Search Bar -->
+<div class="search-bar">
+    <form action="{{ url_for('auction_listing') }}" method="get" class="search-form">
+        <input type="text" name="search" id="search" placeholder="ابحث هنا..." class="form-control">
+        <button type="submit" class="btn btn-primary">بحث</button>
     </form>
 </div>
 
-<div class="main-item">
-    <!-- العناصر المدرجة حسب الوقت المتبقي -->
-        {% for item in items %}
-        <div class="auction-item" data-end-time="{{ item.end_time_iso }}">
-            <img src="{{ item.img }}" alt="{{ item.name }}" class="img-item">
-            <div class="auction-details">
-                <h3>{{ item.name }}</h3>
-                <p class="time-left">الوقت المتبقي: <span>{{ item.time_left }}</span></p>
-                <p>المزايدة الابتدائية: $<span class="start-bid">{{ item.start_bid }}</span></p>
-                <p>الفئة: {{ item.category }}</p>
-                <p>الحالة: {{ item.condition }}</p>
-                <p>الموقع: {{ item.location }}</p>
-                <!-- Add the Bid button -->
-                <!-- Add the Bid form -->
-                <form action="{{ url_for('place_bid', item_id=item.id) }}" method="post">
-                    <input type="number" name="bid_amount" placeholder="حط كم بتزود" required>
-                    <button type="submit">مزايدة</button>
-                </form>
-                <a href="{{ url_for('item_details', item_id=item.id) }}">تفاصيل العنصر</a>
-            </div>
+<!-- Enhanced Sorting Bar with Category, Condition, and Location -->
+<div class="sorting-bar">
+    <form action="{{ url_for('auction_listing') }}" method="get" class="sort-form" id="sort-form">
+        <div class="sort-section">
+            <label for="sort_by">ترتيب حسب:</label>
+            <select name="sort_by" id="sort_by" class="form-control">
+                <option value="time" {% if request.args.sort_by == 'time' %}selected{% endif %}>الوقت</option>
+                <option value="price" {% if request.args.sort_by == 'price' %}selected{% endif %}>السعر</option>
+                <option value="location" {% if request.args.sort_by == 'location' %}selected{% endif %}>الموقع</option>
+            </select>
+
+            <label for="sort_order">الترتيب:</label>
+            <select name="sort_order" id="sort_order" class="form-control">
+                <option value="asc" {% if request.args.sort_order == 'asc' %}selected{% endif %}>الاعلى الى الاقل</option>
+                <option value="desc" {% if request.args.sort_order == 'desc' %}selected{% endif %}>الاقل الى الاعلى</option>
+            </select>
         </div>
-        {% endfor %}
+
+        <div class="filter-section">
+            <label for="category">الفئة:</label>
+            <select name="category" id="category" class="form-control">
+                <option value="">جميع الفئات</option>
+                {% for category in item_categories %}
+                <option value="{{ category }}">{{ category }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="condition">الحالة:</label>
+            <select name="condition" id="condition" class="form-control">
+                <option value="">جميع الحالات</option>
+                {% for condition in item_conditions %}
+                <option value="{{ condition }}">{{ condition }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="location">الموقع:</label>
+            <select name="location" id="location" class="form-control">
+                <option value="">جميع المواقع</option>
+                {% for location in seller_locations %}
+                <option value="{{ location }}">{{ location }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+    </form>
+</div>
+
+
+<div class="main-item">
+    {% for item in items %}
+    <div class="auction-item" data-end-time="{{ item.end_time_iso }}">
+        <img src="{{ item.img }}" alt="{{ item.name }}" class="img-item">
+        <div class="auction-details">
+            <h3>{{ item.name }}</h3>
+            <p class="time-left">الوقت المتبقي: <span>{{ item.time_left }}</span></p>
+            <p>المزايدة الابتدائية: $<span class="start-bid">{{ item.start_bid }}</span></p>
+            <p>الفئة: {{ item.category }}</p>
+            <p>الحالة: {{ item.condition }}</p>
+            <p>الموقع: {{ item.location }}</p>
+            <form action="{{ url_for('place_bid', item_id=item.id) }}" method="post">
+                <input type="number" name="bid_amount" placeholder="حط كم بتزود" required>
+                <button type="submit">مزايدة</button>
+            </form>
+            <a href="{{ url_for('item_details', item_id=item.id) }}">تفاصيل العنصر</a>
+        </div>
     </div>
+    {% endfor %}
 </div>
 {% endblock %}
 {% block extra_scripts %}
@@ -95,5 +128,24 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update auction times every second
     setInterval(updateAuctionTimes, 1000);
 });
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Get the sort form and select elements
+    var sortForm = document.getElementById('sort-form');
+    var sortBySelect = document.getElementById('sort_by');
+    var sortOrderSelect = document.getElementById('sort_order');
+
+    // Function to submit the form
+    function submitForm() {
+        sortForm.submit();
+    }
+
+    // Add change event listeners to the select elements
+    sortBySelect.addEventListener('change', submitForm);
+    sortOrderSelect.addEventListener('change', submitForm);
+});
+
+
 </script>
 {% endblock %}

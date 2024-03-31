@@ -201,13 +201,17 @@ seller_locations = ['الرياض', 'القصيم', 'الشرقية']
 
 @app.route('/auctions')
 def auction_listing():
-
     timezone = pytz.timezone('Asia/Riyadh')
     now = datetime.now(timezone)
-    items = Item.query.filter(Item.time_end > now).all()
+    search_query = request.args.get('search', '')  # Get the search term from the request
+
+    # Filter items by the search term if provided, otherwise get all items ending after now
+    if search_query:
+        items = Item.query.filter(Item.time_end > now, Item.name.ilike(f'%{search_query}%')).all()
+    else:
+        items = Item.query.filter(Item.time_end > now).all()
 
     formatted_items = []
-    # Format the fetched items into dictionaries
     for item in items:
         formatted_item = {
             'id': item.id,
@@ -222,34 +226,30 @@ def auction_listing():
         }
         formatted_items.append(formatted_item)
 
-    # Calculate time left for each item
     for item in formatted_items:
         end_time = timezone.localize(datetime.strptime(item['time_end'], '%Y-%m-%d %H:%M:%S'))
         time_left = end_time - now
         if time_left.total_seconds() > 0:
-            # If time_left is positive, calculate and format the time left string
             days = time_left.days
             hours, remainder = divmod(time_left.seconds, 3600)
             minutes, seconds = divmod(remainder, 60)
             item['time_left'] = f"{days} days {hours} hours {minutes} minutes {seconds} seconds"
         else:
-            # If time_left is non-positive, set the time_left string to "Auction Ended"
             item['time_left'] = "Auction Ended"
         item['end_time_iso'] = end_time.isoformat()
 
     # Get sorting parameters from the request
-    sort_by = request.args.get('sort_by', 'time')  # Default sort by time
-    sort_order = request.args.get('sort_order', 'asc')  # Default sort order
+    sort_by = request.args.get('sort_by', 'time')
+    sort_order = request.args.get('sort_order', 'asc')
 
     if sort_by == 'price':
         sorted_items = sorted(formatted_items, key=lambda x: x['start_bid'], reverse=(sort_order == 'desc'))
     elif sort_by == 'location':
         sorted_items = sorted(formatted_items, key=lambda x: x['location'], reverse=(sort_order == 'desc'))
-    elif sort_by == 'time':
+    else:  # Default to sorting by time
         sorted_items = sorted(formatted_items, key=lambda x: x['end_time_iso'], reverse=(sort_order == 'desc'))
 
-    # Render the template with the fetched and sorted items
-    return render_template('auction.html', categories=item_categories, items=sorted_items)
+    return render_template('auction.html', items=sorted_items)
 
 
 # Item details route
