@@ -588,6 +588,70 @@ body, html {
 }
 
 
+  .search-bar-container {
+    display: flex;
+    justify-content: center; /* Center align search bar */
+    align-items: center; /* Vertical center align */
+    padding: 1.5rem;
+    background: #eceff1; /* Light grey background */
+    direction: rtl; /* Right to left direction */
+  }
+
+  /* Search Form Styling */
+  .search-input,
+  .search-button {
+    padding: 0.75rem 1rem; /* Uniform padding */
+    font-size: 1rem; /* Readable font size */
+    line-height: 1.5; /* Adequate line height for text */
+    vertical-align: middle; /* Align the text vertically */
+  }
+
+  .search-input {
+    flex-grow: 1; /* Input field takes up the available space */
+    margin-right: 0.5rem; /* Spacing between input and button */
+    border: 2px solid #bdbdbd; /* Light grey border */
+    border-radius: 0.375rem; /* Rounded corners */
+    transition: border-color 0.2s; /* Smooth transition for border color */
+  }
+
+  .search-input:focus {
+    outline: none; /* Remove the default focus outline */
+    border-color: #42a5f5; /* Highlight color when focused */
+    box-shadow: 0 0 0 0.2rem rgba(66, 165, 245, 0.25); /* Subtle shadow on focus */
+  }
+
+  .search-button {
+    padding: 0.75rem 1.5rem; /* Slightly more horizontal padding */
+    background-color: #1e88e5; /* A shade of blue for the button */
+    color: white; /* White text color */
+    border: none; /* No border */
+    border-radius: 0.375rem; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth transition for background color */
+  }
+
+  .search-button:hover,
+  .search-button:focus {
+    background-color: #1565c0; /* Darker shade on hover/focus */
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .search-bar-container {
+      flex-direction: column; /* Stack elements in a column on smaller screens */
+      padding: 1rem; /* Lesser padding on smaller screens */
+    }
+
+    .search-input {
+      width: 100%; /* Full-width input on smaller screens */
+      margin-right: 0; /* Reset right margin */
+      margin-bottom: 0.5rem; /* Space below input field */
+    }
+
+    .search-button {
+      width: auto; /* Auto-width based on content */
+    }
+  }
 
 
 
