@@ -656,3 +656,58 @@ body, html {
 
 
 
+/* Image Upload Section */
+.image-preview-container {
+  display: grid; /* Use grid layout for better control */
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Adaptive column sizing */
+  gap: 1rem; /* Space between images */
+  margin-top: 1rem; /* Space above the first image row */
+}
+
+.image-preview {
+  width: 100%; /* Make images take up full container width */
+  border-radius: 8px; /* Rounded corners for aesthetics */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Input field - hidden but accessible */
+#itemImages {
+  display: none; /* Hide the actual input but it's still accessible */
+}
+
+/* Custom button to trigger file input */
+.custom-file-upload {
+  display: inline-block;
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: #4285f4;
+  color: white;
+  border-radius: 8px;
+  margin-bottom: 1rem; /* Space between button and image previews */
+}
+
+.custom-file-upload:hover {
+  background-color: #357ae8;
+}
+
+/* Label for file upload (styled as a button) */
+#itemImagesLabel {
+  display: inline-block;
+  cursor: pointer;
+  padding: 10px 20px;
+  background-color: #4285f4;
+  color: white;
+  border-radius: 8px;
+  text-align: center;
+}
+
+#itemImagesLabel:hover {
+  background-color: #357ae8;
+}
+
+
+
+
+
+
+

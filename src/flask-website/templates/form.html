@@ -2,68 +2,198 @@
 
 {% block title %}إضافة عنصر للمزاد{% endblock %}
 
-
-
 {% block body %}
-<div class="flex justify-center items-center bg-gray-100 form-page py-8"> <!-- Removed h-screen and added py-8 for padding -->
+<div class="flex justify-center items-center bg-gray-100 form-page py-8">
     <div class="w-full max-w-lg px-5 py-10 bg-white rounded shadow-xl" dir="rtl">
-        <h2 class="text-2xl font-semibold text-center text-gray-700 mb-6">إضافة عنصر للمزاد</h2>
+        <h2 class="text-2xl font-semibold text-center text-gray-700 mb-6">إضافة مزاد</h2>
 
         <form action="/form" method="post" enctype="multipart/form-data" class="space-y-4">
-            <div>
-                <label for="itemName" class="text-gray-600">اسم العنصر:</label>
-                <input type="text" id="itemName" name="itemName" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required>
-            </div>
+            <!-- Product Information Section -->
+            <fieldset class="mb-4 p-4 border rounded">
+                <legend class="text-lg font-semibold mb-2">معلومات المنتج</legend>
+                <div>
+                    <label for="itemName" class="text-gray-600">عنوان الاعلان:</label>
+                    <input type="text" id="itemName" name="itemName" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required>
+                </div>
+                <div>
+                    <label for="itemDescription" class="text-gray-600">التفاصيل:</label>
+                    <textarea id="itemDescription" name="itemDescription" rows="4" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required></textarea>
+                </div>
+                <div>
+                    <label for="itemCategory" class="text-gray-600">فئة العنصر:</label>
+                    <select id="itemCategory" name="itemCategory" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required>
+                        <option value="الكترونيات">الكترونيات</option>
+                        <option value="أثاث">أثاث</option>
+                        <option value="ملابس">ملابس</option>
+                        <option value="سيارات">سيارات</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="subcategory" class="text-gray-600">نوع العنصر:</label>
+                    <select id="subcategory" name="subcategory" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required>
+                        <!-- Subcategory options -->
+                    </select>
+                </div>
+                                <div>
+                    <label for="itemCondition" class="text-gray-600">حالة العنصر:</label>
+                    <select id="itemCondition" name="itemCondition" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required>
+                        <option value="جديد">جديد</option>
+                        <option value="مستعمل">مستعمل</option>
+                    </select>
+                </div>
+            </fieldset>
 
-            <div>
-                <label for="itemDescription" class="text-gray-600">وصف العنصر:</label>
-                <textarea id="itemDescription" name="itemDescription" rows="4" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required></textarea>
-            </div>
+            <!-- Auction Details Section -->
+            <fieldset class="mb-4 p-4 border rounded">
+                <legend class="text-lg font-semibold mb-2">تفاصيل المزاد</legend>
+                <div>
+                    <label for="startingBid" class="text-gray-600">المزايدة الابتدائية (بالريال):</label>
+                    <input type="number" id="startingBid" name="startingBid" min="0" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required>
+                </div>
+                <div>
+                    <label for="auctionEndTime" class="text-gray-600">عدد الساعات حتى انتهاء المزاد:</label>
+                    <input type="number" id="auctionEndTime" name="auctionEndTime" min="1" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required>
+                </div>
+            </fieldset>
 
-            <div>
-                <label for="startingBid" class="text-gray-600">المزايدة الابتدائية (بالريال):</label>
-                <input type="number" id="startingBid" name="startingBid" min="0" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required>
-            </div>
+            <!-- Item Condition and Location Section -->
+            <fieldset class="mb-4 p-4 border rounded">
+                <legend class="text-lg font-semibold mb-2">معلومات البائع</legend>
+                <div>
+                    <label for="phoneNumber" class="text-gray-600">رقم الجوال:</label>
+                    <input type="text" id="phoneNumber" name="phoneNumber" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required>
+                </div>
+                <div>
+                    <label for="sellerLocation" class="text-gray-600">موقع البائع:</label>
+                    <select id="sellerLocation" name="sellerLocation" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required>
+                        <option value="الرياض">الرياض</option>
+                        <option value="جدة">جدة</option>
+                        <option value="الدمام">الدمام</option>
+                        <option value="مكة">مكة</option>
+                    </select>
+                </div>
+            </fieldset>
 
-            <div>
-                <label for="auctionEndTime" class="text-gray-600">عدد الساعات حتى انتهاء المزاد:</label>
-                <input type="number" id="auctionEndTime" name="auctionEndTime" min="1" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required>
-            </div>
-
-            <div>
-                <label for="itemCategory" class="text-gray-600">فئة العنصر:</label>
-                <select id="itemCategory" name="itemCategory" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required>
-                    {% for category in item_categories %}
-                        <option value="{{ category }}">{{ category }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div>
-                <label for="itemCondition" class="text-gray-600">حالة العنصر:</label>
-                <select id="itemCondition" name="itemCondition" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required>
-                    {% for condition in item_conditions %}
-                        <option value="{{ condition }}">{{ condition }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div>
-                <label for="sellerLocation" class="text-gray-600">موقع البائع:</label>
-                <select id="sellerLocation" name="sellerLocation" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required>
-                    {% for location in seller_locations %}
-                        <option value="{{ location }}">{{ location }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div>
-                <label for="itemImage" class="text-gray-600">صور العنصر (الصور فقط مسموحة):</label>
-                <input type="file" id="itemImage" name="file" accept="image/*" multiple class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required>
-            </div>
+            <!-- Image Upload Section -->
+            <fieldset class="mb-4 p-4 border rounded">
+                <legend class="text-lg font-semibold mb-2">رفع الصور</legend>
+                <div>
+                    <label for="itemImages" id="itemImagesLabel" class="custom-file-upload">إضافة صور العنصر:</label>
+                    <input type="file" id="itemImages" name="file" accept="image/*" multiple>
+                    <div id="previewImages" class="image-preview-container"></div>
+                </div>
+            </fieldset>
 
             <button type="submit" class="w-full text-white bg-blue-500 py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300">إرسال العنصر</button>
         </form>
     </div>
 </div>
+{% endblock %}
+
+
+{% block extra_scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Call updateSubcategories initially to populate subcategory options based on the default category
+        updateSubcategories();
+
+        // Add event listener to the category dropdown
+        document.getElementById('itemCategory').addEventListener('change', function() {
+            updateSubcategories();
+        });
+    });
+
+    function updateSubcategories() {
+        var category = document.getElementById("itemCategory").value;
+        var subcategoryDropdown = document.getElementById("subcategory");
+
+        // Clear existing options
+        subcategoryDropdown.innerHTML = "";
+
+        // Populate subcategory options based on the selected category
+        switch (category) {
+            case "الكترونيات":
+                addSubcategoryOption("Apple", subcategoryDropdown);
+                addSubcategoryOption("Samsung", subcategoryDropdown);
+                addSubcategoryOption("Huawei", subcategoryDropdown);
+                addSubcategoryOption("Xiaomi", subcategoryDropdown);
+                addSubcategoryOption("Sony", subcategoryDropdown);
+                // Add more options as needed
+                break;
+            case "أثاث":
+                addSubcategoryOption("أثاث مكتبي", subcategoryDropdown);
+                addSubcategoryOption("أثاث غرفة نوم", subcategoryDropdown);
+                addSubcategoryOption("أثاث غرفة جلوس", subcategoryDropdown);
+                addSubcategoryOption("أثاث حدائق", subcategoryDropdown);
+                // Add more options as needed
+                break;
+            case "ملابس":
+                addSubcategoryOption("رجالي", subcategoryDropdown);
+                addSubcategoryOption("نسائي", subcategoryDropdown);
+                addSubcategoryOption("أطفال", subcategoryDropdown);
+                // Add more options as needed
+                break;
+            case "سيارات":
+                // Add options for car brands
+                addSubcategoryOption("تويوتا", subcategoryDropdown);
+                addSubcategoryOption("هوندا", subcategoryDropdown);
+                addSubcategoryOption("نيسان", subcategoryDropdown);
+                addSubcategoryOption("فورد", subcategoryDropdown);
+                addSubcategoryOption("شيفروليه", subcategoryDropdown);
+                addSubcategoryOption("هيونداي", subcategoryDropdown);
+                // Add more options as needed
+                break;
+            // Add cases for other categories
+        }
+    }
+
+    function addSubcategoryOption(optionValue, dropdown) {
+        var option = document.createElement("option");
+        option.text = optionValue;
+        option.value = optionValue;
+        dropdown.add(option);
+    }
+
+
+
+document.getElementById('itemImages').addEventListener('change', function(event) {
+    var files = event.target.files;
+
+    // Append new images to existing ones instead of clearing innerHTML
+    for (var i = 0; i < files.length; i++) {
+        (function(file) {
+            if (!/^image\//.test(file.type)) {
+                return; // Skip if not an image
+            }
+
+            // Create an image element
+            var img = document.createElement('img');
+            img.classList.add('image-preview');
+            img.file = file;
+
+            // Create a container for the image
+            var imgContainer = document.createElement('div');
+            imgContainer.classList.add('image-preview-container');
+            imgContainer.appendChild(img);
+
+            // Append the new image container to the preview container
+            var imagePreviewContainer = document.getElementById('previewImages');
+            imagePreviewContainer.appendChild(imgContainer);
+
+            // Use FileReader to display the image
+            var reader = new FileReader();
+            reader.onload = (function(aImg) {
+                return function(e) {
+                    aImg.src = e.target.result;
+                };
+            })(img);
+            reader.readAsDataURL(file);
+        })(files[i]);
+    }
+});
+
+
+</script>
+
+
 {% endblock %}
