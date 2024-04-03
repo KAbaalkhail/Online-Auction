@@ -711,8 +711,6 @@ body, html {
 
 
 /* item-details.css */
-<<<<<<< HEAD
-=======
 
 .item-details-wrapper {
     display: flex;
@@ -885,7 +883,6 @@ body, html {
     margin-bottom: 10px; /* or any other spacing you prefer */
     text-align: center; /* for RTL support */
 }
->>>>>>> 1c34923fe6160b7fcb31400187ae012d116ab382
 
 .item-details-wrapper {
     display: flex;
