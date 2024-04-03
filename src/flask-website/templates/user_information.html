@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}المعلومات الشخصية{% endblock %}
+
+{% block body %}
+    <h1 style="direction: rtl;">معلومات المستخدم</h1>
+    <form method="post" style="direction: rtl;">
+        <div>
+            <label for="username" style="direction: rtl;">اسم المستخدم:</label>
+            <input type="text" id="username" name="username" value="{{ user.username }}">
+        </div>
+        <div>
+            <label for="email" style="direction: rtl;">البريد الإلكتروني:</label>
+            <input type="email" id="email" name="email" value="{{ user.email }}">
+        </div>
+        <div>
+            <label for="phone_number" style="direction: rtl;">رقم الهاتف:</label>
+            <input type="text" id="phone_number" name="phone_number" value="{{ user.phone_number }}">
+        </div>
+
+        <input type="submit" value="حفظ التغييرات">
+    </form>
+{% endblock %}

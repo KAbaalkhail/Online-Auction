@@ -44,16 +44,14 @@ if not os.path.exists(UPLOAD_FOLDER):
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-
-
-
 # Define the User model
 class User(UserMixin, db.Model):
-    __tablename__ = 'user'  # Ensure the table name is correctly set
+    __tablename__ = 'user'
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
+    phone_number = db.Column(db.String(20))  # Add phone number column
     created_at = db.Column(db.TIMESTAMP, server_default=db.func.current_timestamp(), nullable=False)
 
     # This method should be inside the User class
@@ -72,6 +70,7 @@ class RegistrationForm(FlaskForm):
     username = StringField('اسم المستخدم', validators=[DataRequired(), Length(min=4, max=20)])
     email = StringField('البريد الالكتروني', validators=[DataRequired(), Email()])
     password = PasswordField('كلمة المرور', validators=[DataRequired()])
+    phone_number = StringField('رقم الهاتف')  # Add phone number field
     submit = SubmitField('التسجيل')
 
 class LoginForm(FlaskForm):
@@ -143,6 +142,7 @@ def register():
         username = form.username.data
         email = form.email.data
         password = form.password.data
+        phone_number = form.phone_number.data  # Retrieve phone number from the form
 
         user_by_email = User.query.filter_by(email=email).first()
         user_by_username = User.query.filter_by(username=username).first()
@@ -152,7 +152,7 @@ def register():
             return redirect(url_for('register'))
 
         hashed_password = generate_password_hash(password, method='sha256')
-        new_user = User(username=username, email=email, password=hashed_password)
+        new_user = User(username=username, email=email, password=hashed_password, phone_number=phone_number)  # Store phone number in the database
         db.session.add(new_user)
         db.session.commit()
 
@@ -252,48 +252,15 @@ def auction_listing():
     return render_template('auction.html', items=sorted_items)
 
 
+# Item details route
 @app.route('/item_details/<int:item_id>')
 def item_details(item_id):
-    timezone = pytz.timezone('Asia/Riyadh')
-    now = datetime.now(timezone)
-
     # Fetch item details from the database using item_id
     item = Item.query.get(item_id)
     if not item:
-        flash('العنصر غير موجود')  # If the item doesn't exist, show a message
-        return redirect(url_for('auction_listing'))  # Redirect to the auction listing page
-
-    # Dictionary to hold time left components
-    time_left_components = {
-        'days': 0,
-        'hours': 0,
-        'minutes': 0,
-        'seconds': 0
-    }
-
-    # Calculate time left for the auction, if applicable
-    if item.time_end:
-        end_time = timezone.localize(item.time_end)
-        time_left = end_time - now
-        if time_left.total_seconds() > 0:
-            time_left_components['days'] = time_left.days
-            hours, remainder = divmod(time_left.seconds, 3600)
-            time_left_components['hours'] = hours
-            minutes, seconds = divmod(remainder, 60)
-            time_left_components['minutes'] = minutes
-            time_left_components['seconds'] = seconds
-        else:
-            # Handle the situation when the auction has ended
-            time_left_components = None
-
-    # Fetch related items based on category or other criteria
-    related_items = Item.query.filter(Item.category == item.category, Item.id != item_id).limit(5).all()
-
-    return render_template('item_details.html', item=item, item_time_left=time_left_components, related_items=related_items)
-
-
-
-
+        flash('العنصر غير موجود')
+        return redirect(url_for('auction_listing'))  # Redirect back to the auction listing page
+    return render_template('item_details.html', item=item)
 
 # Place bid route
 @app.route('/place_bid/<int:item_id>', methods=['POST'])
@@ -303,21 +270,21 @@ def place_bid(item_id):
     item = Item.query.get(item_id)
     if not item:
         flash('العنصر غير موجود')
-        return redirect(url_for('auction_listing'))
+        return redirect(url_for('item_details', item_id=item_id))  # Redirect to item_details with item_id
 
     bid_amount = float(request.form['bid_amount'])
 
     if item.seller_id == user_id:  # Check if the buyer is the same as the seller
         flash('لا يمكن للبائع المزايدة على العنصر الخاص به.')
-        return redirect(url_for('auction_listing'))
+        return redirect(url_for('item_details', item_id=item_id))  # Redirect to item_details with item_id
+
     item.buyer_id = user_id
     item.start_bid += bid_amount
 
     db.session.commit()
 
     flash('تمت المزايدة بنجاح!', 'success')
-    return redirect(url_for('auction_listing'))
-
+    return redirect(url_for('item_details', item_id=item_id))  # Redirect to item_details with item_id
 
 
 def allowed_file(filename):
@@ -417,5 +384,45 @@ def user_details():
 
     return render_template('user.html', items_bought=items_bought, items_sold=items_sold)
 
+from flask import request
+
+# Update the user information route to handle POST requests
+@app.route('/user_information', methods=['GET', 'POST'])
+@login_required
+def user_information():
+    # Fetch the current user's information from the database
+    user = User.query.get(current_user.user_id)
+
+    # Check if the user exists
+    if user is None:
+        flash('User not found', 'error')
+        return redirect(url_for('index'))  # Redirect to the index page if user is not found
+
+    # If the request method is POST, it means the form is submitted
+    if request.method == 'POST':
+        # Update the user's username, email, and phone number with the new values from the form
+        new_username = request.form['username']
+        new_email = request.form['email']
+        new_phone_number = request.form['phone_number']
+
+        # Check if the new username already exists in the database
+        existing_user = User.query.filter_by(username=new_username).first()
+        if existing_user and existing_user.user_id != user.user_id:
+            flash('Username already exists. Please choose a different username.', 'error')
+        else:
+            # Check if the new email address already exists in the database
+            existing_email = User.query.filter_by(email=new_email).first()
+            if existing_email and existing_email.user_id != user.user_id:
+                flash('Email address already exists. Please choose a different email address.', 'error')
+            else:
+                user.username = new_username
+                user.email = new_email
+                user.phone_number = new_phone_number  # Update phone number
+                db.session.commit()  # Commit the changes to the database
+                flash('User information updated successfully!', 'success')
+
+    # Render the user_information.html template with the user's information
+    return render_template('user_information.html', user=user)
+
 if __name__ == '__main__':
-    app.run(debug=True)  # Turn off debug mode for production deployment
+    app.run(debug=True)

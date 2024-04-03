@@ -32,6 +32,14 @@
                     {{ form.password(class="form-control") }}
                 </div>
             </div>
+            <div class="register-field">  <!-- Add this section for the phone number -->
+                <div class="form-label">
+                    {{ form.phone_number.label }}
+                </div>
+                <div class="form-input">
+                    {{ form.phone_number(class="form-control") }}
+                </div>
+            </div>
             <div class="register-action">
                 {{ form.submit(class="btn btn-primary") }}
             </div>

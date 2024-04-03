@@ -3,56 +3,71 @@
 {% block title %}الصفحة الشخصية{% endblock %}
 
 {% block body %}
-<h1>المنتجات التي تم المزايدة عليها والتي تم بيعها</h1>
-{% if items_bought or items_sold %}
-<div class="main-item">
-    <table class="item-table" dir="rtl">
-        <thead>
-            <tr>
-                <th>الصورة</th>
-                <th>الاسم</th>
-                <th>الوقت المتبقي</th>
-                <th>المزايدة الابتدائية</th>
-                <th>الفئة</th>
-                <th>الحالة</th>
-                <th>الموقع</th>
-                <th>الرقم المرجعي</th>
-                <th>البائع/المشتري</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in items_bought %}
-            <tr>
-                <td><img src="{{ item.img }}" alt="{{ item.name }}" class="img-item img-small"></td>
-                <td>{{ item.name }}</td>
-                <td class="time-left" data-end-time="{{ item.end_time_iso }}">{{ item.time_left }}</td>
-                <td>$<span class="start-bid">{{ item.start_bid }}</span></td>
-                <td>{{ item.category }}</td>
-                <td>{{ item.condition }}</td>
-                <td>{{ item.location }}</td>
-                <td>{{ item.id }}</td>
-                <td class="buyer">المشتري</td>
-            </tr>
-            {% endfor %}
-            {% for item in items_sold %}
-            <tr>
-                <td><img src="{{ item.img }}" alt="{{ item.name }}" class="img-item img-small"></td>
-                <td>{{ item.name }}</td>
-                <td class="time-left" data-end-time="{{ item.end_time_iso }}">{{ item.time_left }}</td>
-                <td>$<span class="start-bid">{{ item.start_bid }}</span></td>
-                <td>{{ item.category }}</td>
-                <td>{{ item.condition }}</td>
-                <td>{{ item.location }}</td>
-                <td>{{ item.id }}</td>
-                <td class="seller">البائع</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="container">
+    <div class="row">
+        <div class="col-md-9">
+            <h1>المنتجات التي تم المزايدة عليها والتي تم بيعها</h1>
+            {% if items_bought or items_sold %}
+            <div class="main-item">
+                <table class="item-table" dir="rtl">
+                    <thead>
+                        <tr>
+                            <th>الصورة</th>
+                            <th>الاسم</th>
+                            <th>الوقت المتبقي</th>
+                            <th>المزايدة الابتدائية</th>
+                            <th>الفئة</th>
+                            <th>الحالة</th>
+                            <th>الموقع</th>
+                            <th>الرقم المرجعي</th>
+                            <th>البائع/المشتري</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items_bought %}
+                        <tr>
+                            <td><img src="{{ item.img }}" alt="{{ item.name }}" class="img-item img-small"></td>
+                            <td>{{ item.name }}</td>
+                            <td class="time-left" data-end-time="{{ item.end_time_iso }}">{{ item.time_left }}</td>
+                            <td><span class="start-bid">{{ item.start_bid }}</span>ريال</td>
+                            <td>{{ item.category }}</td>
+                            <td>{{ item.condition }}</td>
+                            <td>{{ item.location }}</td>
+                            <td>{{ item.id }}</td>
+                            <td class="buyer">المشتري</td>
+                        </tr>
+                        {% endfor %}
+                        {% for item in items_sold %}
+                        <tr>
+                            <td><img src="{{ item.img }}" alt="{{ item.name }}" class="img-item img-small"></td>
+                            <td>{{ item.name }}</td>
+                            <td class="time-left" data-end-time="{{ item.end_time_iso }}">{{ item.time_left }}</td>
+                            <td><span class="start-bid">{{ item.start_bid }} </span>ريال</td>
+                            <td>{{ item.category }}</td>
+                            <td>{{ item.condition }}</td>
+                            <td>{{ item.location }}</td>
+                            <td>{{ item.id }}</td>
+                            <td class="seller">البائع</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p>لايوجد منتجات تم شرائها أو تم بيعها.</p>
+            {% endif %}
+        </div>
+        <div class="col-md-3">
+            <div class="sidebar">
+                <h3>القائمة</h3>
+                <ul>
+                    <li><a href="{{ url_for('user_details') }}">المعلومات الشخصية</a></li>
+                    <li><a href="{{ url_for('user_profile') }}">العودة إلى الصفحة الشخصية</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
-{% else %}
-<p>لايوجد منتجات تم شرائها أو تم بيعها.</p>
-{% endif %}
 {% endblock %}
 
 {% block extra_scripts %}

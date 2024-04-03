@@ -41,9 +41,10 @@
 
         </div>
         <form action="{{ url_for('place_bid', item_id=item.id) }}" method="post" class="item-details-bid-form">
-            <input type="number" name="bid_amount" placeholder="المبلغ المزايد عليه" required>
+            <input type="number" name="bid_amount" placeholder="المبلغ المزايد عليه" required min="0" required>
             <button type="submit">مزايدة</button>
         </form>
+
     </div>
     <div class="item-details-content-container">
         <h2 class="item-details-title">{{ item.name }}</h2>

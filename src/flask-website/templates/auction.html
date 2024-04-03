@@ -62,26 +62,24 @@
     </form>
 </div>
 
+
 <div class="main-item">
     {% for item in items %}
-    <a href="{{ url_for('item_details', item_id=item.id) }}" class="auction-item" data-end-time="{{ item.end_time_iso }}">
+    <div class="auction-item" data-end-time="{{ item.end_time_iso }}">
         <img src="{{ item.img }}" alt="{{ item.name }}" class="img-item">
         <div class="auction-details">
             <h3>{{ item.name }}</h3>
             <p class="time-left">الوقت المتبقي: <span>{{ item.time_left }}</span></p>
-            <p>المزايدة الابتدائية: $<span class="start-bid">{{ item.start_bid }}</span></p>
+            <p>السعر الحالي: <span class="start-bid">{{ item.start_bid }}</span> ريال</p>
             <p>الفئة: {{ item.category }}</p>
             <p>الحالة: {{ item.condition }}</p>
             <p>الموقع: {{ item.location }}</p>
-            <form action="{{ url_for('place_bid', item_id=item.id) }}" method="post">
-                <input type="number" name="bid_amount" placeholder="حط كم بتزود" required min="0">
-                <button type="submit">مزايدة</button>
-            </form> 
+
+            <a href="{{ url_for('item_details', item_id=item.id) }}">تفاصيل العنصر</a>
         </div>
-    </a>
+    </div>
     {% endfor %}
 </div>
-
 {% endblock %}
 {% block extra_scripts %}
 <script>
