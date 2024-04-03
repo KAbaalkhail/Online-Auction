@@ -252,15 +252,48 @@ def auction_listing():
     return render_template('auction.html', items=sorted_items)
 
 
-# Item details route
 @app.route('/item_details/<int:item_id>')
 def item_details(item_id):
+    timezone = pytz.timezone('Asia/Riyadh')
+    now = datetime.now(timezone)
+
     # Fetch item details from the database using item_id
     item = Item.query.get(item_id)
     if not item:
-        flash('العنصر غير موجود')
-        return redirect(url_for('auction_listing'))  # Redirect back to the auction listing page
-    return render_template('item_details.html', item=item)
+        flash('العنصر غير موجود')  # If the item doesn't exist, show a message
+        return redirect(url_for('auction_listing'))  # Redirect to the auction listing page
+
+    # Dictionary to hold time left components
+    time_left_components = {
+        'days': 0,
+        'hours': 0,
+        'minutes': 0,
+        'seconds': 0
+    }
+
+    # Calculate time left for the auction, if applicable
+    if item.time_end:
+        end_time = timezone.localize(item.time_end)
+        time_left = end_time - now
+        if time_left.total_seconds() > 0:
+            time_left_components['days'] = time_left.days
+            hours, remainder = divmod(time_left.seconds, 3600)
+            time_left_components['hours'] = hours
+            minutes, seconds = divmod(remainder, 60)
+            time_left_components['minutes'] = minutes
+            time_left_components['seconds'] = seconds
+        else:
+            # Handle the situation when the auction has ended
+            time_left_components = None
+
+    # Fetch related items based on category or other criteria
+    related_items = Item.query.filter(Item.category == item.category, Item.id != item_id).limit(5).all()
+
+    return render_template('item_details.html', item=item, item_time_left=time_left_components, related_items=related_items)
+
+
+
+
 
 # Place bid route
 @app.route('/place_bid/<int:item_id>', methods=['POST'])

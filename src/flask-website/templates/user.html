@@ -1,67 +1,57 @@
 {% extends 'base.html' %}
 {% block body_attributes %}class="form-page rtl-page"{% endblock %}
 {% block title %}الصفحة الشخصية{% endblock %}
-<style>
 
-</style>
 {% block body %}
-<h1>المنتجات التي تم المزايدة عليها</h1>
-{% if items_bought %}
+<h1>المنتجات التي تم المزايدة عليها والتي تم بيعها</h1>
+{% if items_bought or items_sold %}
 <div class="main-item">
-    <!-- العناصر المدرجة حسب الوقت المتبقي -->
-        {% for item in items_bought %}
-        <div class="auction-item" data-end-time="{{ item.end_time_iso }}">
-            <img src="{{ item.img }}" alt="{{ item.name }}" class="img-item">
-            <div class="auction-details">
-                <h3>{{ item.name }}</h3>
-                <p class="time-left">الوقت المتبقي: <span>{{ item.time_left }}</span></p>
-                <p>المزايدة الابتدائية: $<span class="start-bid">{{ item.start_bid }}</span></p>
-                <p>الفئة: {{ item.category }}</p>
-                <p>الحالة: {{ item.condition }}</p>
-                <p>الموقع: {{ item.location }}</p>
-                <!-- Add the Bid button -->
-                <!-- Add the Bid form -->
-                <form action="{{ url_for('place_bid', item_id=item.id) }}" method="post">
-                    <input type="number" name="bid_amount" placeholder="حط كم بتزود" required>
-                    <button type="submit">مزايدة</button>
-                </form>
-                <a href="{{ url_for('item_details', item_id=item.id) }}">تفاصيل العنصر</a>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
+    <table class="item-table" dir="rtl">
+        <thead>
+            <tr>
+                <th>الصورة</th>
+                <th>الاسم</th>
+                <th>الوقت المتبقي</th>
+                <th>المزايدة الابتدائية</th>
+                <th>الفئة</th>
+                <th>الحالة</th>
+                <th>الموقع</th>
+                <th>الرقم المرجعي</th>
+                <th>البائع/المشتري</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items_bought %}
+            <tr>
+                <td><img src="{{ item.img }}" alt="{{ item.name }}" class="img-item img-small"></td>
+                <td>{{ item.name }}</td>
+                <td class="time-left" data-end-time="{{ item.end_time_iso }}">{{ item.time_left }}</td>
+                <td>$<span class="start-bid">{{ item.start_bid }}</span></td>
+                <td>{{ item.category }}</td>
+                <td>{{ item.condition }}</td>
+                <td>{{ item.location }}</td>
+                <td>{{ item.id }}</td>
+                <td class="buyer">المشتري</td>
+            </tr>
+            {% endfor %}
+            {% for item in items_sold %}
+            <tr>
+                <td><img src="{{ item.img }}" alt="{{ item.name }}" class="img-item img-small"></td>
+                <td>{{ item.name }}</td>
+                <td class="time-left" data-end-time="{{ item.end_time_iso }}">{{ item.time_left }}</td>
+                <td>$<span class="start-bid">{{ item.start_bid }}</span></td>
+                <td>{{ item.category }}</td>
+                <td>{{ item.condition }}</td>
+                <td>{{ item.location }}</td>
+                <td>{{ item.id }}</td>
+                <td class="seller">البائع</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% else %}
-  <p>لايوجد منتجات تم شرائها</p>
-{% endif %}
-<h1>المنتجات التي تم بيعها</h1>
-{% if items_bought %}
-<div class="main-item">
-    <!-- العناصر المدرجة حسب الوقت المتبقي -->
-        {% for item in items_sold %}
-        <div class="auction-item" data-end-time="{{ item.end_time_iso }}">
-            <img src="{{ item.img }}" alt="{{ item.name }}" class="img-item">
-            <div class="auction-details">
-                <h3>{{ item.name }}</h3>
-                <p class="time-left">الوقت المتبقي: <span>{{ item.time_left }}</span></p>
-                <p>المزايدة الابتدائية: $<span class="start-bid">{{ item.start_bid }}</span></p>
-                <p>الفئة: {{ item.category }}</p>
-                <p>الحالة: {{ item.condition }}</p>
-                <p>الموقع: {{ item.location }}</p>
-                <!-- Add the Bid button -->
-                <!-- Add the Bid form -->
-                <form action="{{ url_for('place_bid', item_id=item.id) }}" method="post">
-                    <input type="number" name="bid_amount" placeholder="حط كم بتزود" required>
-                    <button type="submit">مزايدة</button>
-                </form>
-                <a href="{{ url_for('item_details', item_id=item.id) }}">تفاصيل العنصر</a>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-</div>
-{% else %}
-  <p>لا يوجد منتجات تم بيعها.</p>
+<p>لايوجد منتجات تم شرائها أو تم بيعها.</p>
 {% endif %}
 {% endblock %}
 
@@ -69,7 +59,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     function updateAuctionTimes() {
-        var items = document.querySelectorAll('.auction-item');
+        var items = document.querySelectorAll('.time-left');
         items.forEach(function(item) {
             var endTime = new Date(item.getAttribute('data-end-time'));
             var now = new Date();
@@ -77,10 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Check if the auction has ended
             if (timeLeft <= 0) {
-                var display = item.querySelector('.time-left span');
-                if (display) {
-                    display.textContent = "المزاد انتهى";
-                }
+                item.textContent = "المزاد انتهى";
             } else {
                 // Calculate the remaining time
                 var seconds = Math.floor(timeLeft / 1000);
@@ -92,25 +79,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 minutes %= 60;
                 seconds %= 60;
 
-                var timeString = '';
-                if (days > 0) {
-                    timeString += days + ' يوم ';
-                }
-                if (hours > 0) {
-                    timeString += hours + ' ساعة ';
-                }
-                if (minutes > 0) {
-                    timeString += minutes + ' دقيقة ';
-                }
-                if (seconds > 0) {
-                    timeString += seconds + ' ثانية';
-                }
+                var timeString = `${days} يوم ${hours} ساعة ${minutes} دقيقة ${seconds} ثانية`;
 
                 // Update the display with the remaining time
-                var display = item.querySelector('.time-left span');
-                if (display) {
-                    display.textContent = timeString;
-                }
+                item.textContent = timeString;
             }
         });
     }
@@ -122,4 +94,5 @@ document.addEventListener('DOMContentLoaded', function() {
     setInterval(updateAuctionTimes, 1000);
 });
 </script>
+
 {% endblock %}

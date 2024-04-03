@@ -1,16 +1,129 @@
 {% extends 'base.html' %}
 {% block title %}تفاصيل العنصر{% endblock %}
 
-{% block extra_head %}
-    <!-- يمكن وضع المحتوى الإضافي لرأس الصفحة هنا -->
+{% block body %}
+<div class="item-details-wrapper">
+    <div class="item-details-sidebar">
+        <div class="item-details-info-container">
+
+            <div class="item-details-price-container">
+                <span class="item-details-start-bid">{{ item.price }}</span>
+            </div>
+{% if item_time_left %}
+    <div class="item-details-auction-time">
+        <div class="time-block">
+            <span class="time-number">{{ item_time_left['days'] }}</span>
+            <span class="time-label">يوم</span>
+        </div>
+        <div class="time-block">
+            <span class="time-number">{{ item_time_left['hours'] }}</span>
+            <span class="time-label">ساعة</span>
+        </div>
+        <div class="time-block">
+            <span class="time-number">{{ item_time_left['minutes'] }}</span>
+            <span class="time-label">دقيقة</span>
+        </div>
+        <div class="time-block">
+            <span class="time-number">{{ item_time_left['seconds'] }}</span>
+            <span class="time-label">ثانية</span>
+        </div>
+    </div>
+{% else %}
+    <p>Auction Ended or No auction end time specified</p>
+{% endif %}
+
+                        <!-- Starting Bid -->
+            <p class="item-details-starting-bid">المزايدة الابتدائية: <span class="start-bid">{{ item.start_bid }}</span></p>
+
+            <div class="item-details-price-container">
+                <span class="item-details-start-bid">{{ item.price }}</span>
+            </div>
+
+        </div>
+        <form action="{{ url_for('place_bid', item_id=item.id) }}" method="post" class="item-details-bid-form">
+            <input type="number" name="bid_amount" placeholder="المبلغ المزايد عليه" required>
+            <button type="submit">مزايدة</button>
+        </form>
+    </div>
+    <div class="item-details-content-container">
+        <h2 class="item-details-title">{{ item.name }}</h2>
+        <div class="item-details-image-container">
+            {% set image_path = item.img if not item.img.startswith('static/') else item.img[7:] %}
+            <img src="{{ url_for('static', filename=image_path) }}" alt="{{ item.name }}" class="item-details-image">
+        </div>
+        <div class="item-details-description">
+    <div class="category-item">
+        <div class="category-title">الفئة</div>
+        <div class="category-info">{{ item.category }}</div>
+    </div>
+    <div class="category-item">
+        <div class="category-title">الحالة</div>
+        <div class="category-info">{{ item.condition }}</div>
+    </div>
+    <div class="category-item">
+        <div class="category-title">الموقع</div>
+        <div class="category-info">{{ item.location }}</div>
+    </div>
+    <!-- More categories can be added in similar fashion -->
+</div>
+
+    </div>
+</div>
 {% endblock %}
 
-{% block body %}
-<h1>{{ item.name }}</h1>
-<p>{{ item.description }}</p>
-<p>المزايدة الابتدائية: ${{ item.start_bid }}</p>
-<p>الفئة: {{ item.category }}</p>
-<p>الحالة: {{ item.condition }}</p>
-<p>الموقع: {{ item.location }}</p>
-<p>وقت الانتهاء: {{ item.time_end }}</p>
+{% block extra_scripts %}
+<script>
+// Assuming your Flask backend is sending the end time as a Unix timestamp
+var auctionEndTime = new Date({{ item.time_end.timestamp() }} * 1000);
+
+function updateAuctionTime() {
+    var now = new Date();
+    var timeLeft = auctionEndTime - now;
+
+    if (timeLeft > 0) {
+        // Calculate time components
+        var seconds = Math.floor(timeLeft / 1000);
+        var minutes = Math.floor(seconds / 60);
+        var hours = Math.floor(minutes / 60);
+        var days = Math.floor(hours / 24);
+
+        hours %= 24;
+        minutes %= 60;
+        seconds %= 60;
+
+        // Update the time display
+        document.querySelector('.item-details-auction-time .time-block:nth-child(1) .time-number').textContent = days;
+        document.querySelector('.item-details-auction-time .time-block:nth-child(2) .time-number').textContent = hours;
+        document.querySelector('.item-details-auction-time .time-block:nth-child(3) .time-number').textContent = minutes;
+        document.querySelector('.item-details-auction-time .time-block:nth-child(4) .time-number').textContent = seconds;
+    } else {
+        // Handle auction end
+        document.querySelector('.item-details-auction-time').textContent = "المزاد انتهى";
+    }
+}
+
+// Initial call
+updateAuctionTime();
+
+// Update every second
+setInterval(updateAuctionTime, 1000);
+
+
+
+// JavaScript function to change the image
+let currentImageIndex = 0;
+const images = document.querySelectorAll('.item-details-image');
+
+function changeImage(direction) {
+    images[currentImageIndex].classList.remove('active');
+    currentImageIndex += direction;
+    if (currentImageIndex >= images.length) {
+        currentImageIndex = 0;
+    } else if (currentImageIndex < 0) {
+        currentImageIndex = images.length - 1;
+    }
+    images[currentImageIndex].classList.add('active');
+}
+</script>
 {% endblock %}
+
