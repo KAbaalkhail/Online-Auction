@@ -710,4 +710,177 @@ body, html {
 
 
 
+/* item-details.css */
+
+.item-details-wrapper {
+    display: flex;
+    flex-direction: row-reverse; /* Adjusts layout for RTL */
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    direction: rtl;
+    text-align: right;
+}
+
+.item-details-content-container {
+    width: calc(100% - 180px);
+    padding-left: 20px;
+}
+
+.item-details-title {
+    font-size: 32px; /* Increased font size for more impact */
+    color: #333; /* Keeping the color neutral for readability */
+    font-weight: 600; /* Making the font slightly bolder than normal but not too heavy */
+    margin-bottom: 20px; /* Adjusted margin to balance whitespace */
+    line-height: 1.2; /* Tightening up the line height for a more compact title */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Subtle text shadow for depth */
+    display: inline-block; /* Allows control over additional properties like transform */
+    transform: translateY(-2px); /* Slightly shifts the title up for a dynamic effect */
+    transition: transform 0.3s ease; /* Smooth transition for hover effect */
+}
+
+
+
+
+.item-details-image-container {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.item-details-image {
+    max-width: 60%; /* Adjust this value as needed to make the image smaller */
+    height: auto;
+    border-radius: 8px;
+    display: block; /* To center the image using margin */
+    margin: 0 auto; /* Centers the image */
+}
+
+.item-details-description {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Adjust 'minmax' values as needed */
+    text-align: center; /* Center align text for all items */
+    gap: 20px; /* Spacing between grid items */
+    margin-bottom: 30px; /* Space below the entire grid */
+}
+
+.category-item {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+}
+
+.category-title {
+    font-weight: bold;
+    margin-bottom: 5px; /* Space between the title and the info */
+}
+
+
+
+.item-details-time-left,
+.item-details-start-bid {
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 10px;
+}
+
+.item-details-auction {
+    padding: 10px;
+    background-color: #e9ecef;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.item-details-bid-form {
+    display: flex;
+    gap: 15px; /* Provides more space between form items */
+    align-items: center; /* Vertically centers items */
+}
+
+.item-details-bid-form input[type="number"] {
+    flex-grow: 1;
+    padding: 12px 15px; /* Slightly larger padding for a more touch-friendly interface */
+    border: 2px solid #ddd; /* Slightly thicker border for better visual structure */
+    border-radius: 8px;
+    margin-top: 0; /* Removed top margin to align with the button */
+    font-size: 16px; /* Larger font size for better readability */
+    line-height: 1.5; /* Improved line height for better text legibility */
+    color: #333; /* Darker text for better contrast and readability */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    transition: border-color 0.3s ease; /* Smooth transition for border color */
+}
+
+.item-details-bid-form input[type="number"]:focus {
+    border-color: #28a745; /* Highlight input on focus for better visibility and accessibility */
+    outline: none; /* Removes the default focus outline */
+    box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.25); /* Adds a 'glow' effect on focus */
+}
+
+
+.item-details-bid-form button {
+    padding: 10px 20px; /* Increased padding for a larger button */
+    font-size: 16px; /* Larger font size for better readability */
+    font-weight: bold; /* Make the text bold */
+    letter-spacing: 1px; /* Add some spacing between letters */
+    border: none;
+    border-radius: 8px;
+    background-color: #28a745;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    white-space: nowrap;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    display: inline-block; /* Ensures proper spacing around the button */
+    margin: 0; /* Resets any default margin */
+}
+
+.item-details-bid-form button:hover, .item-details-bid-form button:focus {
+    background-color: #218838; /* Darker shade on hover for feedback */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Larger shadow on hover for a 'lifting' effect */
+    outline: none; /* Removes the outline to keep the design clean */
+}
+
+.item-details-bid-form button:hover {
+    background-color: #218838;
+}
+
+
+
+.item-details-auction-time {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.time-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff; /* White background for the time blocks */
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* subtle shadow */
+}
+
+.time-number {
+    font-size: 18px; /* larger font size for the numbers */
+    font-weight: bold;
+    margin-bottom: 5px; /* spacing between number and label */
+}
+
+.time-label {
+    font-size: 14px; /* smaller font size for labels */
+    color: #555; /* Darker text color for contrast */
+}
+
+.item-details-starting-bid {
+    font-size: 16px;
+    margin-bottom: 10px; /* or any other spacing you prefer */
+    text-align: center; /* for RTL support */
+}
 
