@@ -251,8 +251,9 @@ def auction_listing():
 
     return render_template('auction.html', items=sorted_items)
 
+from datetime import datetime, timedelta
 
-# Item details route
+# Your Flask route function
 @app.route('/item_details/<int:item_id>')
 def item_details(item_id):
     # Fetch item details from the database using item_id
@@ -260,7 +261,20 @@ def item_details(item_id):
     if not item:
         flash('العنصر غير موجود')
         return redirect(url_for('auction_listing'))  # Redirect back to the auction listing page
-    return render_template('item_details.html', item=item)
+
+    # Calculate the remaining time for the auction
+    now = datetime.utcnow()
+    if item.time_end > now:
+        time_left = item.time_end - now
+        days = time_left.days
+        hours, remainder = divmod(time_left.seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        item_time_left = {'days': days, 'hours': hours, 'minutes': minutes, 'seconds': seconds}
+    else:
+        item_time_left = None
+
+    # Pass item and item_time_left to the template context
+    return render_template('item_details.html', item=item, item_time_left=item_time_left)
 
 # Place bid route
 @app.route('/place_bid/<int:item_id>', methods=['POST'])

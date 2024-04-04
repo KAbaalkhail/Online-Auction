@@ -9,30 +9,30 @@
             <div class="item-details-price-container">
                 <span class="item-details-start-bid">{{ item.price }}</span>
             </div>
-{% if item_time_left %}
-    <div class="item-details-auction-time">
-        <div class="time-block">
-            <span class="time-number">{{ item_time_left['days'] }}</span>
-            <span class="time-label">يوم</span>
-        </div>
-        <div class="time-block">
-            <span class="time-number">{{ item_time_left['hours'] }}</span>
-            <span class="time-label">ساعة</span>
-        </div>
-        <div class="time-block">
-            <span class="time-number">{{ item_time_left['minutes'] }}</span>
-            <span class="time-label">دقيقة</span>
-        </div>
-        <div class="time-block">
-            <span class="time-number">{{ item_time_left['seconds'] }}</span>
-            <span class="time-label">ثانية</span>
-        </div>
-    </div>
-{% else %}
-    <p>Auction Ended or No auction end time specified</p>
-{% endif %}
+            {% if item_time_left %}
+                <div class="item-details-auction-time">
+                    <div class="time-block">
+                        <span class="time-number">{{ item_time_left['days'] }}</span>
+                        <span class="time-label">يوم</span>
+                    </div>
+                    <div class="time-block">
+                        <span class="time-number">{{ item_time_left['hours'] }}</span>
+                        <span class="time-label">ساعة</span>
+                    </div>
+                    <div class="time-block">
+                        <span class="time-number">{{ item_time_left['minutes'] }}</span>
+                        <span class="time-label">دقيقة</span>
+                    </div>
+                    <div class="time-block">
+                        <span class="time-number">{{ item_time_left['seconds'] }}</span>
+                        <span class="time-label">ثانية</span>
+                    </div>
+                </div>
+            {% else %}
+                <p>Auction Ended or No auction end time specified</p>
+            {% endif %}
 
-                        <!-- Starting Bid -->
+            <!-- Starting Bid -->
             <p class="item-details-starting-bid">المزايدة الابتدائية: <span class="start-bid">{{ item.start_bid }}</span></p>
 
             <div class="item-details-price-container">
@@ -52,21 +52,20 @@
             <img src="{{ url_for('static', filename=image_path) }}" alt="{{ item.name }}" class="item-details-image">
         </div>
         <div class="item-details-description">
-    <div class="category-item">
-        <div class="category-title">الفئة</div>
-        <div class="category-info">{{ item.category }}</div>
-    </div>
-    <div class="category-item">
-        <div class="category-title">الحالة</div>
-        <div class="category-info">{{ item.condition }}</div>
-    </div>
-    <div class="category-item">
-        <div class="category-title">الموقع</div>
-        <div class="category-info">{{ item.location }}</div>
-    </div>
-    <!-- More categories can be added in similar fashion -->
-</div>
-
+            <div class="category-item">
+                <div class="category-title">الفئة</div>
+                <div class="category-info">{{ item.category }}</div>
+            </div>
+            <div class="category-item">
+                <div class="category-title">الحالة</div>
+                <div class="category-info">{{ item.condition }}</div>
+            </div>
+            <div class="category-item">
+                <div class="category-title">الموقع</div>
+                <div class="category-info">{{ item.location }}</div>
+            </div>
+            <!-- More categories can be added in a similar fashion -->
+        </div>
     </div>
 </div>
 {% endblock %}
