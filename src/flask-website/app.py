@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import DataRequired, Email, Length
+from wtforms.validators import DataRequired, Email, Length, EqualTo
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -70,6 +70,7 @@ class RegistrationForm(FlaskForm):
     username = StringField('اسم المستخدم', validators=[DataRequired(), Length(min=4, max=20)])
     email = StringField('البريد الالكتروني', validators=[DataRequired(), Email()])
     password = PasswordField('كلمة المرور', validators=[DataRequired()])
+    confirm_password = PasswordField('تأكيد كلمة المرور', validators=[DataRequired(), EqualTo('password', message='Passwords must match')])
     phone_number = StringField('رقم الهاتف')  # Add phone number field
     submit = SubmitField('التسجيل')
 
