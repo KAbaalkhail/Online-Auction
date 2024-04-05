@@ -65,21 +65,55 @@
 
 <div class="main-item">
     {% for item in items %}
-    <div class="auction-item" data-end-time="{{ item.end_time_iso }}">
-        <img src="{{ item.img }}" alt="{{ item.name }}" class="img-item">
-        <div class="auction-details">
-            <h3>{{ item.name }}</h3>
-            <p class="time-left">الوقت المتبقي: <span>{{ item.time_left }}</span></p>
-            <p>السعر الحالي: <span class="start-bid">{{ item.start_bid }}</span> ريال</p>
-            <p>الفئة: {{ item.category }}</p>
-            <p>الحالة: {{ item.condition }}</p>
-            <p>الموقع: {{ item.location }}</p>
-
-            <a href="{{ url_for('item_details', item_id=item.id) }}">تفاصيل العنصر</a>
+    <!-- Use an anchor tag to make the entire container clickable -->
+    <a href="{{ url_for('item_details', item_id=item.id) }}" class="auction-item-link">
+        <div class="auction-item" data-end-time="{{ item.end_time_iso }}">
+            <img src="{{ item.img }}" alt="{{ item.name }}" class="img-item">
+            <div class="auction-details">
+                <h3>{{ item.name }}</h3>
+                <div class="auction-time-display">
+                    <div class="auction-time-block">
+                        <span class="auction-time-number days">{{ item.time_left.days }}</span>
+                        <span class="auction-time-label">يوم</span>
+                    </div>
+                    <div class="auction-time-block">
+                        <span class="auction-time-number hours">{{ item.time_left.hours }}</span>
+                        <span class="auction-time-label">ساعة</span>
+                    </div>
+                    <div class="auction-time-block">
+                        <span class="auction-time-number minutes">{{ item.time_left.minutes }}</span>
+                        <span class="auction-time-label">دقيقة</span>
+                    </div>
+                    <div class="auction-time-block">
+                        <span class="auction-time-number seconds">{{ item.time_left.seconds }}</span>
+                        <span class="auction-time-label">ثانية</span>
+                    </div>
+                </div>
+                <p class="detail price-detail">
+                    <span class="detail-label">السعر الحالي:</span>
+                    <span class="detail-value start-bid">{{ item.start_bid }}</span> ريال
+                </p>
+                <p class="detail category-detail">
+                    <span class="detail-label">الفئة:</span>
+                    <span class="detail-value">{{ item.category }}</span>
+                </p>
+                <p class="detail condition-detail">
+                    <span class="detail-label">الحالة:</span>
+                    <span class="detail-value">{{ item.condition }}</span>
+                </p>
+                <p class="detail location-detail">
+                    <span class="detail-label">الموقع:</span>
+                    <span class="detail-value">{{ item.location }}</span>
+                </p>
+            </div>
         </div>
-    </div>
+    </a>
     {% endfor %}
 </div>
+
+
+
+
 {% endblock %}
 {% block extra_scripts %}
 <script>
@@ -91,14 +125,20 @@ document.addEventListener('DOMContentLoaded', function() {
             var now = new Date();
             var timeLeft = endTime - now;
 
-            // Check if the auction has ended
+            var daysElem = item.querySelector('.auction-time-number.days');
+            var hoursElem = item.querySelector('.auction-time-number.hours');
+            var minutesElem = item.querySelector('.auction-time-number.minutes');
+            var secondsElem = item.querySelector('.auction-time-number.seconds');
+
             if (timeLeft <= 0) {
-                var display = item.querySelector('.time-left span');
-                if (display) {
-                    display.textContent = "المزاد انتهى";
+                if (daysElem && hoursElem && minutesElem && secondsElem) {
+                    daysElem.textContent = '0';
+                    hoursElem.textContent = '0';
+                    minutesElem.textContent = '0';
+                    secondsElem.textContent = '0';
                 }
+                item.querySelector('.auction-time-display').textContent = "المزاد انتهى";
             } else {
-                // Calculate the remaining time
                 var seconds = Math.floor(timeLeft / 1000);
                 var minutes = Math.floor(seconds / 60);
                 var hours = Math.floor(minutes / 60);
@@ -108,23 +148,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 minutes %= 60;
                 seconds %= 60;
 
-                var timeString = `${days} يوم ${hours} ساعة ${minutes} دقيقة ${seconds} ثانية`;
+                if (daysElem) daysElem.textContent = days;
+                else console.error('Days element not found.');
 
-                // Update the display with the remaining time
-                var display = item.querySelector('.time-left span');
-                if (display) {
-                    display.textContent = timeString;
-                }
+                if (hoursElem) hoursElem.textContent = hours;
+                else console.error('Hours element not found.');
+
+                if (minutesElem) minutesElem.textContent = minutes;
+                else console.error('Minutes element not found.');
+
+                if (secondsElem) secondsElem.textContent = seconds;
+                else console.error('Seconds element not found.');
             }
         });
     }
 
-    // Update auction times initially
-    updateAuctionTimes();
-
-    // Update auction times every second
-    setInterval(updateAuctionTimes, 1000);
+    updateAuctionTimes(); // Call it once to initialize
+    setInterval(updateAuctionTimes, 1000); // Then every second
 });
+
+
 
 
 document.addEventListener('DOMContentLoaded', function() {

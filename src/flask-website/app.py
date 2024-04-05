@@ -212,45 +212,47 @@ def auction_listing():
     else:
         items = Item.query.filter(Item.time_end > now).all()
 
-    formatted_items = []
-    for item in items:
-        formatted_item = {
-            'id': item.id,
-            'name': item.name,
-            'description': item.description,
-            'start_bid': item.start_bid,
-            'time_end': item.time_end.strftime('%Y-%m-%d %H:%M:%S'),
-            'category': item.category,
-            'condition': item.condition,
-            'location': item.location,
-            'img': item.img
-        }
-        formatted_items.append(formatted_item)
-
-    for item in formatted_items:
-        end_time = timezone.localize(datetime.strptime(item['time_end'], '%Y-%m-%d %H:%M:%S'))
+    # Function to create a time left dictionary
+    def get_time_left_dict(end_time):
         time_left = end_time - now
         if time_left.total_seconds() > 0:
-            days = time_left.days
-            hours, remainder = divmod(time_left.seconds, 3600)
-            minutes, seconds = divmod(remainder, 60)
-            item['time_left'] = f"{days} days {hours} hours {minutes} minutes {seconds} seconds"
+            return {
+                'days': time_left.days,
+                'hours': time_left.seconds // 3600,
+                'minutes': (time_left.seconds % 3600) // 60,
+                'seconds': time_left.seconds % 60
+            }
         else:
-            item['time_left'] = "Auction Ended"
-        item['end_time_iso'] = end_time.isoformat()
+            return None
+
+    # Format items for the template
+    formatted_items = [{
+        'id': item.id,
+        'name': item.name,
+        'description': item.description,
+        'start_bid': item.start_bid,
+        'time_left': get_time_left_dict(timezone.localize(item.time_end)),
+        'time_end': item.time_end.strftime('%Y-%m-%d %H:%M:%S'),
+        'end_time_iso': timezone.localize(item.time_end).isoformat(),
+        'category': item.category,
+        'condition': item.condition,
+        'location': item.location,
+        'img': item.img
+    } for item in items]
 
     # Get sorting parameters from the request
     sort_by = request.args.get('sort_by', 'time')
     sort_order = request.args.get('sort_order', 'asc')
 
+    # Sort items based on parameters
     if sort_by == 'price':
-        sorted_items = sorted(formatted_items, key=lambda x: x['start_bid'], reverse=(sort_order == 'desc'))
+        formatted_items.sort(key=lambda x: x['start_bid'], reverse=(sort_order == 'desc'))
     elif sort_by == 'location':
-        sorted_items = sorted(formatted_items, key=lambda x: x['location'], reverse=(sort_order == 'desc'))
+        formatted_items.sort(key=lambda x: x['location'], reverse=(sort_order == 'desc'))
     else:  # Default to sorting by time
-        sorted_items = sorted(formatted_items, key=lambda x: x['end_time_iso'], reverse=(sort_order == 'desc'))
+        formatted_items.sort(key=lambda x: x['end_time_iso'], reverse=(sort_order == 'desc'))
 
-    return render_template('auction.html', items=sorted_items)
+    return render_template('auction.html', items=formatted_items)
 
 from datetime import datetime, timedelta
 

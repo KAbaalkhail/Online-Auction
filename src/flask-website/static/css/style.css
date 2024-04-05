@@ -35,46 +35,75 @@ body, html {
 }
 
 .auction-item {
-    border: 1px solid #ddd; /* subtler border */
-    padding: 15px;
-    margin-bottom: 15px; /* space between auction items */
-    background-color: #fff; /* light background for the item */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* subtle shadow for depth */
-    border-radius: 5px; /* rounded corners */
-    overflow: hidden; /* ensures content fits nicely */
-    position: relative; /* Needed for absolute positioning of children */
-    padding-right: 15px; /* Adjusted for RTL */
-    padding-left: 15px; /* Adjusted for RTL */
-    direction: rtl;
+    background-color: #ffffff; /* White background for cleanliness */
+    border-radius: 10px; /* Rounded corners for modern look */
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    margin: 15px; /* Margin for spacing between items */
+    padding: 20px; /* Padding inside the items */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions for hover effects */
+    overflow: hidden; /* Hide overflow */
+    direction: rtl; /* Maintain right-to-left direction */
+    transition: transform 0.5s ease, box-shadow 0.5s ease; /* Slower transition for both properties */
+    will-change: transform, box-shadow;
+    cursor: pointer;
+
+}
+
+.auction-item-link {
+    text-decoration: none; /* Remove the underline from the link */
+    color: inherit; /* Use the color from the parent elements */
+    display: block; /* Block display to enable width and height */
+    margin: 10px; /* Space around the item */
+}
+
+.auction-details {
+    display: block; /* Stack information vertically */
+    padding: 10px; /* Give some breathing room */
 }
 
 .auction-details h3 {
-    font-family: 'Arial', sans-serif; /* Change as needed */
-    font-size: 1.2rem; /* Larger font size */
-    font-weight: bold; /* Bold font weight */
+    font-family: 'Arial', sans-serif; /* Maintain the font family */
+    font-size: 1.8rem; /* Slightly larger font size */
     color: #333; /* Dark color for the text */
-    margin-bottom: 10px; /* Space below the title */
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.2); /* Text shadow for depth */
-    padding-right: 10px; /* Right padding for RTL alignment */
-    display: inline-block; /* To wrap the background */
-    border-radius: 5px; /* Rounded corners */
-    transition: all 0.3s ease; /* Transition for hover effect */
-}
-
-.auction-details h3:hover {
-    transform: translateX(-5px); /* Shift to the left on hover */
+    margin-bottom: 15px; /* Increase space below the title */
+    font-weight: 600; /* Semi-bold for importance */
 }
 
 
 
-  .time-left {
-    font-weight: bold;
-    color: #d9534f; /* a color that indicates urgency */
-  }
+.auction-time-display {
+    display: flex; /* Flexbox to hold time blocks */
+    justify-content: flex-start; /* Align time blocks to the right (for RTL) */
+    gap: 5px; /* Spacing between time blocks */
+
+
+}
+
+.auction-time-block {
+    background-color: #f8f9fa; /* Lighter grey for time blocks */
+    padding: 10px; /* Padding within time blocks */
+    margin-bottom: 0.75rem;
+    border-radius: 5px; /* Rounded corners for time blocks */
+    text-align: center; /* Center text in time blocks */
+    min-width: 20px; /* Minimum width to ensure uniform size */
+
+}
+
+.auction-time-number {
+    font-size: 18px; /* Larger font size for numbers */
+    font-weight: bold; /* Bold font weight for numbers */
+}
+
+.auction-time-label {
+    font-size: 14px; /* Smaller font size for labels */
+}
+
+
 
   .auction-details h3 {
     color: #333; /* darker color for better readability */
-    margin-bottom: 5px; /* space after title */
+    font-size: 1.25rem; /* Increase font size for better visibility */
+    margin-bottom: 0.75rem
 }
 
   form {
@@ -99,18 +128,75 @@ body, html {
     cursor: pointer; /* indicates an interactive element */
   }
 
-  .auction-item a {
-    display: inline-block; /* ensures proper spacing */
-    margin-top: 10px; /* space above link */
-    color: #0275d8; /* bootstrap primary color */
-    text-decoration: none; /* no underline */
-    padding: 5px 0; /* padding for clickable area */
-  }
+.auction-details p {
+    color: #333; /* Standard text color for better contrast */
+    font-size: 0.9rem; /* Slightly smaller for non-primary details */
+    margin-bottom: 8px; /* Consistent spacing between items */
+    line-height: 1.6; /* Enhance line height for readability */
+    font-family: "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif; /* Modern, legible font stack */
+    display: block; /* Flex layout for label and value alignment */
+    align-items: baseline; /* Align label and value baseline */
+}
 
-/* Subtle hover effect to raise the box */
+/* Styling for labels of details to maintain consistency */
+.detail-label {
+    font-size: 1rem; /* Larger size for labels */
+    font-weight: 600; /* Semi-bold weight for labels */
+    color: #555; /* Dark grey for labels for contrast */
+    margin-right: 5px; /* Space between label and value */
+}
+
+
+
+/* Specific styling for values */
+.detail-value {
+    font-weight: normal; /* Regular weight for values */
+    color: #333; /* Darker for the actual value */
+    flex-grow: 1; /* Take available space */
+}
+
+/* Enhanced styling for category name */
+.category-name {
+    font-weight: bold; /* Bold for emphasis */
+    color: #0056b3; /* Specific shade of blue for category name */
+    margin-left: 2px; /* Spacing after label */
+}
+
+/* Make each detail stand out with background */
+.auction-details .detail {
+    background-color: #f8f9fa; /* Light background for each detail */
+    border-radius: 5px; /* Rounded corners for aesthetics */
+    padding: 2px 5px; /* Padding for spacing within detail */
+    margin-right: 10px; /* Space between details */
+}
+
+/* Hover effect for the entire auction item */
+.auction-item-link:hover .auction-item {
+    transform: translateY(-3px); /* Slight move up */
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1); /* More prominent shadow for 3D effect */
+}
+
+/* Visually distinguishing the clickable items */
+.auction-item-link {
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions for hover effects */
+    text-decoration: none; /* Remove text decoration from links */
+}
+
+
+.auction-details a {
+    display: inline-block; /* For proper alignment */
+    padding: 8px 16px; /* Padding for a clickable area */
+    background-color: #007bff; /* Brand color for action buttons */
+    color: #fff; /* Contrast color for the text */
+    border-radius: 4px; /* Rounded corners for the button */
+    text-decoration: none; /* No underline for links */
+    margin-top: 15px; /* Space above the link */
+    transition: background-color 0.3s; /* Transition for hover effect */
+}
+
 .auction-item:hover {
-    transform: translateX(-5px); /* Move the box up slightly on hover */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+    transform: scale(1.01); /* More subtle enlargement on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Softer shadow for a gentle pop-out effect */
 }
 
 /* Pseudo-element for additional visual flair, like a ribbon or a tag */
@@ -131,9 +217,8 @@ body, html {
 
 /* Styling for the item title, making it more pronounced */
 .auction-item h2 {
-    font-size: 1.5rem; /* Increased font size for the title */
-    font-weight: 600; /* Semi-bold weight */
-    margin-bottom: 1rem; /* More space below the title */
+    font-size: 1.75rem; /* Slightly larger than h3 for hierarchy */
+    margin-bottom: 0.5rem; /* Less space to keep related info closer */
 }
 
 /* Enhance the look of the item details for better readability */
@@ -142,6 +227,7 @@ body, html {
     color: #666; /* Lighter text color for details */
     line-height: 1.4; /* Increased line height for better readability */
     margin-bottom: 1rem; /* Space before the next section */
+    font-family: Arial, sans-serif; /* Consistent font for readability */
 }
 
 /* Style for the 'Bid Now' button */
@@ -209,13 +295,6 @@ body, html {
     color: blue; /* Arrow color */
     font-size: 24px; /* Arrow size */
 }
-
-
-
-
-
-
-
 
 /* Specific styles for the form page */
 .form-page .form-container {
