@@ -5,8 +5,12 @@ from wtforms.validators import DataRequired, Email, Length, EqualTo
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
+from decimal import Decimal
 import os
+import babel
+import humanize
 import pytz
+from babel.numbers import format_currency
 from datetime import datetime, timedelta
 from flask_login import (LoginManager, UserMixin, login_user, logout_user,
                          current_user, login_required)
@@ -79,9 +83,25 @@ class LoginForm(FlaskForm):
     password = PasswordField('كلمة المرور', validators=[DataRequired()])
     submit = SubmitField('تسجيل الدخول')
 
+class Bid(db.Model):
+    __tablename__ = 'bids'
+    bid_id = db.Column(db.Integer, primary_key=True)
+    bid_amount = db.Column(db.Numeric(10, 2), nullable=False)
+    bid_time = db.Column(db.TIMESTAMP, server_default=db.func.current_timestamp(), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)  # Changed from 'users.user_id' to 'user.user_id'
+    item_id = db.Column(db.Integer, db.ForeignKey('items.item_id'), nullable=False)
+
+    user = db.relationship('User', backref='bids')
+    item = db.relationship('Item', backref='bids')
+
+
+
+
+
 # Define Item model
 class Item(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    __tablename__ = 'items'
+    id = db.Column('item_id', db.Integer, primary_key=True)  # This should be 'item_id', not 'id'
     name = db.Column(db.String(100))
     description = db.Column(db.Text)
     start_bid = db.Column(db.Float)
@@ -100,6 +120,14 @@ class Item(db.Model):
 def create_tables():
     db.create_all()
 
+@app.template_filter('time_ago')
+def time_ago_filter(value):
+    delta = datetime.utcnow() - value
+    return humanize.naturaltime(delta)
+
+@app.template_filter('currency')
+def currency_filter(value, currency='SAR'):
+    return format_currency(value, currency, locale='ar_SA')
 # Home route
 @app.route('/')
 def index():
@@ -267,41 +295,59 @@ def item_details(item_id):
 
     # Calculate the remaining time for the auction
     now = datetime.utcnow()
-    if item.time_end > now:
+    item_time_left = None
+    if item.time_end and item.time_end > now:
         time_left = item.time_end - now
         days = time_left.days
         hours, remainder = divmod(time_left.seconds, 3600)
         minutes, seconds = divmod(remainder, 60)
         item_time_left = {'days': days, 'hours': hours, 'minutes': minutes, 'seconds': seconds}
-    else:
-        item_time_left = None
+
+    # Query for bid history, ordering by bid_time
+    bid_history = Bid.query.filter_by(item_id=item.id).order_by(Bid.bid_time.desc()).all()
+
+    # Calculate the new total price for each bid
+    for bid in bid_history:
+        bid.new_total_price = Decimal(item.start_bid) + Decimal(bid.bid_amount)
 
     # Pass item and item_time_left to the template context
-    return render_template('item_details.html', item=item, item_time_left=item_time_left)
+    return render_template(
+        'item_details.html',
+        item=item,
+        item_time_left=item_time_left,
+        bid_history=bid_history
+    )
+
+
 
 # Place bid route
 @app.route('/place_bid/<int:item_id>', methods=['POST'])
 @login_required
 def place_bid(item_id):
-    user_id = session['user_id']
     item = Item.query.get(item_id)
     if not item:
         flash('العنصر غير موجود')
-        return redirect(url_for('item_details', item_id=item_id))  # Redirect to item_details with item_id
+        return redirect(url_for('auction_listing'))
 
-    bid_amount = float(request.form['bid_amount'])
+    bid_amount = request.form.get('bid_amount', type=float)
+    if bid_amount is None:
+        flash('Invalid bid amount')
+        return redirect(url_for('item_details', item_id=item_id))
 
-    if item.seller_id == user_id:  # Check if the buyer is the same as the seller
-        flash('لا يمكن للبائع المزايدة على العنصر الخاص به.')
-        return redirect(url_for('item_details', item_id=item_id))  # Redirect to item_details with item_id
+    # Further validation can be added here
 
-    item.buyer_id = user_id
-    item.start_bid += bid_amount
+    new_bid = Bid(item_id=item.id, user_id=current_user.user_id, bid_amount=bid_amount)
+    db.session.add(new_bid)
 
-    db.session.commit()
+    try:
+        db.session.commit()
+        flash('تمت المزايدة بنجاح!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash('An error occurred. Please try again.', 'error')
+        app.logger.error('Error on bid submission: %s', e)
 
-    flash('تمت المزايدة بنجاح!', 'success')
-    return redirect(url_for('item_details', item_id=item_id))  # Redirect to item_details with item_id
+    return redirect(url_for('item_details', item_id=item_id))
 
 
 def allowed_file(filename):

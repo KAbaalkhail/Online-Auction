@@ -24,3 +24,14 @@ CREATE TABLE IF NOT EXISTS items (
     seller_id INT,  -- Add this column
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS bids (
+    bid_id INT AUTO_INCREMENT PRIMARY KEY,
+    bid_amount DECIMAL(10, 2) NOT NULL,
+    bid_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    user_id INT NOT NULL,
+    item_id INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (item_id) REFERENCES items(item_id)
+);
+

@@ -44,6 +44,40 @@
             <input type="number" name="bid_amount" placeholder="المبلغ المزايد عليه" required>
             <button type="submit">مزايدة</button>
         </form>
+
+<div class="bid-history-container mt-4">
+    <h3 class="bid-history-title text-center mb-3">تاريخ المزايدات</h3>
+    {% if bid_history %}
+        <div class="bid-history-table-responsive">
+            <table class="bid-history-table table">
+                <thead>
+                    <tr>
+                        <th scope="col">المستخدم</th>
+                        <th scope="col">المبلغ المزايد</th>
+                        <th scope="col">السعر الإجمالي</th>
+                        <th scope="col">وقت المزايدة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for bid in bid_history %}
+                        <tr>
+                            <td>***{{ bid.user.username[:3] }}</td>
+                            <td>{{ bid.bid_amount | currency }}</td>
+                            <td>{{ bid.new_total_price | currency }}</td>
+                            <td>{{ bid.bid_time | time_ago }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="bid-history-none text-center">لم تتم أي مزايدات بعد.</p>
+    {% endif %}
+</div>
+
+
+
+
     </div>
     <div class="item-details-content-container">
         <h2 class="item-details-title">{{ item.name }}</h2>
@@ -64,7 +98,10 @@
                 <div class="category-title">الموقع</div>
                 <div class="category-info">{{ item.location }}</div>
             </div>
-            <!-- More categories can be added in a similar fashion -->
+        <div class="category-item">
+            <div class="category-title">الوصف</div>
+            <div class="category-info">{{ item.description }}</div>
+        </div>
         </div>
     </div>
 </div>

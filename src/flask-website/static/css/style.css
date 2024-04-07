@@ -856,14 +856,83 @@ body, html {
 }
 
 .category-item {
+    background-color: #fff; /* White background */
+    border: 1px solid #dee2e6; /* Add border for definition */
+    border-radius: 8px; /* Rounded corners */
+    padding: 0.5rem; /* Padding inside the items */
+    margin-bottom: 1rem; /* Margin at the bottom of each item */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     display: flex;
-    flex-direction: column; /* Stack items vertically */
+    flex-direction: column; /* Stack title and info vertically */
+    align-items: start; /* Align items to the start for a more traditional layout */
 }
 
 .category-title {
     font-weight: bold;
-    margin-bottom: 5px; /* Space between the title and the info */
+    margin-bottom: 0.5rem; /* Space between the title and the info */
+    color: #333; /* Dark text for better readability */
+    padding-left: 10px; /* Align text with the content below */
 }
+
+.category-info {
+    padding-left: 10px; /* Align text with the title above */
+    color: #555; /* Slightly lighter text for the info */
+}
+
+/* If you have a border around each category-item, you may want to adjust the last-child */
+.category-item:last-child {
+    margin-bottom: 0; /* Remove bottom margin on the last item */
+}
+
+.bid-history-container {
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff; /* Add a white background for better contrast */
+    margin-top: 2rem; /* Ensure margin at the top for spacing */
+}
+
+.bid-history-title {
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 1rem; /* Adjusted for spacing */
+    text-align: center;
+}
+
+.bid-history-table-responsive {
+    overflow-x: auto;
+}
+
+.bid-history-table {
+    width: 100%;
+    border-collapse: collapse; /* Collapse borders to make it look cleaner */
+    margin-bottom: 0;
+}
+
+.bid-history-table th {
+    font-weight: 600; /* Slightly heavier font for headers */
+    color: #555; /* Dark grey for less contrast */
+    background-color: #f9f9f9; /* Light grey background for headers */
+    padding: 0.75rem;
+}
+
+.bid-history-table td {
+    padding: 0.5rem;
+    text-align: center;
+    vertical-align: middle;
+    border-bottom: 1px solid #eaeaea; /* Only horizontal borders for separation */
+}
+
+.bid-history-none {
+    color: #6c757d;
+    text-align: center; /* Center the text for the empty message */
+    padding: 2rem 0; /* Add padding for visual space */
+}
+
+
+
+
+
 
 
 
