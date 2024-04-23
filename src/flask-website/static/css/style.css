@@ -865,6 +865,19 @@ body, html {
     display: flex;
     flex-direction: column; /* Stack title and info vertically */
     align-items: start; /* Align items to the start for a more traditional layout */
+   
+}
+.category-itemDescription {
+    background-color: #fff; /* White background */
+    border: 1px solid #dee2e6; /* Add border for definition */
+    border-radius: 8px; /* Rounded corners */
+    padding: 0.5rem; /* Padding inside the items */
+    margin-bottom: 1rem; /* Margin at the bottom of each item */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column; /* Stack title and info vertically */
+    align-items: start; /* Align items to the start for a more traditional layout */
+    width: 426px; /* Set the width of the box */
 }
 
 .category-title {

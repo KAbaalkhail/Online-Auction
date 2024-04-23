@@ -68,7 +68,7 @@
     <!-- Use an anchor tag to make the entire container clickable -->
     <a href="{{ url_for('item_details', item_id=item.id) }}" class="auction-item-link">
         <div class="auction-item" data-end-time="{{ item.end_time_iso }}">
-            <img src="{{ item.img }}" alt="{{ item.name }}" class="img-item">
+            <img src="{{ item.img }}" alt="{{ item.name }}" class="item-details-image">
             <div class="auction-details">
                 <h3>{{ item.name }}</h3>
                 <div class="auction-time-display">
