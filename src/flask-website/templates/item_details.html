@@ -45,47 +45,50 @@
             <button type="submit">مزايدة</button>
         </form>
 
-<div class="bid-history-container mt-4">
-    <h3 class="bid-history-title text-center mb-3">تاريخ المزايدات</h3>
-    {% if bid_history %}
-        <div class="bid-history-table-responsive">
-            <table class="bid-history-table table">
-                <thead>
-                    <tr>
-                        <th scope="col">المستخدم</th>
-                        <th scope="col">المبلغ المزايد</th>
-                        <th scope="col">السعر الإجمالي</th>
-                        <th scope="col">وقت المزايدة</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for bid in bid_history %}
-                        <tr>
-                            <td>***{{ bid.user.username[:3] }}</td>
-                            <td>{{ bid.bid_amount | currency }}</td>
-                            <td>{{ bid.new_total_price | currency }}</td>
-                            <td>{{ bid.bid_time | time_ago }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <div class="bid-history-container mt-4">
+            <h3 class="bid-history-title text-center mb-3">تاريخ المزايدات</h3>
+            {% if bid_history %}
+                <div class="bid-history-table-responsive">
+                    <table class="bid-history-table table">
+                        <thead>
+                            <tr>
+                                <th scope="col">المستخدم</th>
+                                <th scope="col">المبلغ المزايد</th>
+                                <th scope="col">السعر الإجمالي</th>
+                                <th scope="col">وقت المزايدة</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for bid in bid_history %}
+                                <tr>
+                                    <td>***{{ bid.user.username[:3] }}</td>
+                                    <td>{{ bid.bid_amount | currency }}</td>
+                                    <td>{{ bid.new_total_price | currency }}</td>
+                                    <td>{{ bid.bid_time | time_ago }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="bid-history-none text-center">لم تتم أي مزايدات بعد.</p>
+            {% endif %}
         </div>
-    {% else %}
-        <p class="bid-history-none text-center">لم تتم أي مزايدات بعد.</p>
-    {% endif %}
-</div>
-
-
-
-
     </div>
+
     <div class="item-details-content-container">
         <h2 class="item-details-title">{{ item.name }}</h2>
         <div class="item-details-image-container">
             {% set image_path = item.img if not item.img.startswith('static/') else item.img[7:] %}
             <img src="{{ url_for('static', filename=image_path) }}" alt="{{ item.name }}" class="item-details-image">
+
+
         </div>
         <div class="item-details-description">
+            <div class="category-item">
+                <div class="category-title">رقم الهاتف: </div>
+                <div class="category-info">{{ seller_phone_number }}</div>
+            </div>
             <div class="category-item">
                 <div class="category-title">الفئة</div>
                 <div class="category-info">{{ item.category }}</div>
@@ -98,67 +101,11 @@
                 <div class="category-title">الموقع</div>
                 <div class="category-info">{{ item.location }}</div>
             </div>
-        <div class="category-itemDescription">
-            <div class="category-title">الوصف</div>
-            <div class="category-info">{{ item.description }}</div>
-        </div>
+            <div class="category-itemDescription">
+                <div class="category-title">الوصف</div>
+                <div class="category-info">{{ item.description }}</div>
+            </div>
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block extra_scripts %}
-<script>
-// Assuming your Flask backend is sending the end time as a Unix timestamp
-var auctionEndTime = new Date({{ item.time_end.timestamp() }} * 1000);
-
-function updateAuctionTime() {
-    var now = new Date();
-    var timeLeft = auctionEndTime - now;
-
-    if (timeLeft > 0) {
-        // Calculate time components
-        var seconds = Math.floor(timeLeft / 1000);
-        var minutes = Math.floor(seconds / 60);
-        var hours = Math.floor(minutes / 60);
-        var days = Math.floor(hours / 24);
-
-        hours %= 24;
-        minutes %= 60;
-        seconds %= 60;
-
-        // Update the time display
-        document.querySelector('.item-details-auction-time .time-block:nth-child(1) .time-number').textContent = days;
-        document.querySelector('.item-details-auction-time .time-block:nth-child(2) .time-number').textContent = hours;
-        document.querySelector('.item-details-auction-time .time-block:nth-child(3) .time-number').textContent = minutes;
-        document.querySelector('.item-details-auction-time .time-block:nth-child(4) .time-number').textContent = seconds;
-    } else {
-        // Handle auction end
-        document.querySelector('.item-details-auction-time').textContent = "المزاد انتهى";
-    }
-}
-
-// Initial call
-updateAuctionTime();
-
-// Update every second
-setInterval(updateAuctionTime, 1000);
-
-
-
-// JavaScript function to change the image
-let currentImageIndex = 0;
-const images = document.querySelectorAll('.item-details-image');
-
-function changeImage(direction) {
-    images[currentImageIndex].classList.remove('active');
-    currentImageIndex += direction;
-    if (currentImageIndex >= images.length) {
-        currentImageIndex = 0;
-    } else if (currentImageIndex < 0) {
-        currentImageIndex = images.length - 1;
-    }
-    images[currentImageIndex].classList.add('active');
-}
-</script>
 {% endblock %}

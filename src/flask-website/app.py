@@ -291,9 +291,9 @@ def item_details(item_id):
     item = Item.query.get(item_id)
     if not item:
         flash('العنصر غير موجود')
-        return redirect(url_for('auction_listing'))  # Redirect back to the auction listing page
-
+        return redirect(url_for('auction_listing'))  # 
     # Calculate the remaining time for the auction
+    seller_phone_number = item.seller.phone_number if item.seller else None
     now = datetime.utcnow()
     item_time_left = None
     if item.time_end and item.time_end > now:
@@ -310,10 +310,10 @@ def item_details(item_id):
     for bid in bid_history:
         bid.new_total_price = Decimal(item.start_bid) + Decimal(bid.bid_amount)
 
-    # Pass item and item_time_left to the template context
     return render_template(
         'item_details.html',
         item=item,
+        seller_phone_number=seller_phone_number,  # Add this line
         item_time_left=item_time_left,
         bid_history=bid_history
     )
