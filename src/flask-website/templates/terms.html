@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اتفاقية الرسوم</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .terms-container {
+            background: #ffffff;
+            width: 95%; /* Increased width */
+            max-width: 700px; /* Adjusted max-width */
+            margin: 30px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .terms-header {
+            color: #333;
+            font-size: 22px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eaeaea;
+            padding-bottom: 10px;
+        }
+
+        .terms-content {
+            color: #555;
+            font-size: 16px;
+            line-height: 1.8;
+            text-align: justify;
+            margin-bottom: 20px;
+        }
+
+        .terms-quote {
+            color: #2c3e50;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .terms-footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            margin: 0 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .agree-button {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .disagree-button {
+            background-color: #c0392b;
+            color: white;
+        }
+
+        .agree-button:hover {
+            background-color: #2ecc71;
+        }
+
+        .disagree-button:hover {
+            background-color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="terms-container">
+        <div class="terms-header">اتفاقية الرسوم</div>
+        <div class="terms-quote">
+            بسم الله الرحمن الرحيم<br>
+            قال الله تعالى: "وَأَوْفُواْ بِعَهْدِ اللهِ إِذَا عَاهَدتُّمْ وَلاَ تَنقُضُواْ الأَيْمَانَ بَعْدَ تَوْكِيدِهَا وَقَدْ جَعَلْتُمُ اللهَ عَلَيْكُمْ كَفِيلاً" صدق الله العظيم
+        </div>
+        <div class="terms-content">
+            <ul>
+                <li>اتعهد واقسم بالله أنا المعلن أن أدفع رسوم الموقع وهي 1% من قيمة البيع سواء تم البيع عن طريق الموقع أو بسببه.</li>
+                <li>كما أتعهد بدفع الرسوم خلال 10 أيام من استلام كامل مبلغ المبايعة.</li>
+                <li>ملاحظة: رسوم الموقع هي على المعلن ولا تبرأ ذمة المعلن من الرسوم إلا في حال دفعها.</li>
+            </ul>
+        </div>
+<div class="terms-footer">
+    <form id="terms-form" action="/terms" method="POST">
+        <input type="hidden" name="user_response" id="user-response">
+        <button type="button" class="button agree-button" onclick="agree()">موافق</button>
+        <button type="button" class="button disagree-button" onclick="disagree()">غير موافق</button>
+    </form>
+</div>
+
+</body>
+</html>
+
+<script>
+    function agree() {
+        document.getElementById("user-response").value = "agree";
+        document.getElementById("terms-form").submit();
+    }
+
+    function disagree() {
+        document.getElementById("user-response").value = "disagree";
+        document.getElementById("terms-form").submit();
+    }
+</script>
+

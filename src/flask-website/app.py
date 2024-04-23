@@ -407,6 +407,23 @@ def item_form():
 
     return render_template('form.html', item_categories=item_categories, item_conditions=item_conditions,
                            seller_locations=seller_locations)
+
+
+@app.route('/terms', methods=['GET', 'POST'])
+def terms():
+    if request.method == 'POST':
+        user_response = request.form.get('user_response')
+        if user_response == 'agree':
+            # Redirect to the form page if the user agrees to the terms
+            return redirect(url_for('item_form'))
+        else:
+            # Redirect to the main page if the user does not agree
+            return redirect(url_for('index'))
+
+    # Render the terms page
+    return render_template('terms.html')
+
+
 @app.route('/user')
 @login_required
 def user_details():
