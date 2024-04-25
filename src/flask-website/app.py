@@ -303,12 +303,15 @@ def item_details(item_id):
         minutes, seconds = divmod(remainder, 60)
         item_time_left = {'days': days, 'hours': hours, 'minutes': minutes, 'seconds': seconds}
 
-    # Query for bid history, ordering by bid_time
-    bid_history = Bid.query.filter_by(item_id=item.id).order_by(Bid.bid_time.desc()).all()
+        bid_history = Bid.query.filter_by(item_id=item.id).order_by(Bid.bid_time.desc()).all()
 
-    # Calculate the new total price for each bid
-    for bid in bid_history:
-        bid.new_total_price = Decimal(item.start_bid) + Decimal(bid.bid_amount)
+        # Ensure the start_bid is a Decimal
+        current_total_price = Decimal(item.start_bid)  # Convert start_bid to Decimal
+
+        # Update the bids with the new total price, which accumulates the bid amounts
+        for bid in reversed(bid_history):  # Reverse the list to start from the earliest bid
+            current_total_price += bid.bid_amount  # Ensure bid.bid_amount is also Decimal
+            bid.new_total_price = current_total_price  # Set the new total price for the bid
 
     return render_template(
         'item_details.html',
