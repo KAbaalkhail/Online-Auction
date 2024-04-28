@@ -1,16 +1,26 @@
 {% extends 'base.html' %}
-{% block body_attributes %}class="form-page rtl-page"{% endblock %}
+
 {% block title %}الصفحة الشخصية{% endblock %}
 
 {% block body %}
 <div class="container">
-    <div class="row">
+    <div class="row rtl-layout"> <!-- The 'rtl-layout' class will ensure proper RTL styling -->
+        <!-- Sidebar Menu -->
+        <div class="col-md-3 sidebar">
+            <h3>القائمة</h3>
+            <ul>
+                <li><a href="{{ url_for('user_information') }}">المعلومات الشخصية</a></li>
+                <li><a href="{{ url_for('user_details') }}">العمليات</a></li>
+                <!-- More links as needed -->
+            </ul>
+        </div>
+        <!-- Main Content Area -->
         <div class="col-md-9">
             <h1>المنتجات التي تم المزايدة عليها والتي تم بيعها</h1>
             {% if items_bought or items_sold %}
-            <div class="main-item">
+            <div class="table-responsive">
                 <table class="item-table" dir="rtl">
-                    <thead>
+                      <thead>
                         <tr>
                             <th>الصورة</th>
                             <th>الاسم</th>
@@ -56,15 +66,6 @@
             {% else %}
             <p>لايوجد منتجات تم شرائها أو تم بيعها.</p>
             {% endif %}
-        </div>
-        <div class="col-md-3">
-            <div class="sidebar">
-                <h3>القائمة</h3>
-                <ul>
-                    <li><a href="{{ url_for('user_information') }}">المعلومات الشخصية</a></li>
-                    <li><a href="{{ url_for('user_details') }}">العودة إلى الصفحة الشخصية</a></li>
-                </ul>
-            </div>
         </div>
     </div>
 </div>

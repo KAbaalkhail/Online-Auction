@@ -12,10 +12,7 @@
 <div class="static-images-container w-full max-w-screen-lg mx-auto overflow-hidden">
     <!-- Images here -->
     <img class="static-image" src="{{ url_for('static', filename='aaa.png') }}" alt="Image 1">
-   <!-- <img class="static-image" src="{{ url_for('static', filename='3.png') }}" alt="Image 2">
-    <img class="static-image" src="{{ url_for('static', filename='2.png') }}" alt="Image 3">
-    <img class="static-image" src="{{ url_for('static', filename='bbb.jpg') }}" alt="Image 4">
-    <!-- More images can be added here -->
+
 </div>
 
 
@@ -77,10 +74,11 @@
 
 <div class="main-item">
     {% for item in items %}
-    <!-- Use an anchor tag to make the entire container clickable -->
     <a href="{{ url_for('item_details', item_id=item.id) }}" class="auction-item-link">
         <div class="auction-item" data-end-time="{{ item.end_time_iso }}">
-            <img src="{{ item.img }}" alt="{{ item.name }}" class="img-item">
+            <div class="image-container">
+                <img src="{{ item.img }}" alt="{{ item.name }}" class="img-item">
+            </div>
             <div class="auction-details">
                 <h3>{{ item.name }}</h3>
                 <div class="auction-time-display">

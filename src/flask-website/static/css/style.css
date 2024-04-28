@@ -28,17 +28,19 @@ body, html {
     justify-content: flex-end; /* Align items to the right */
 }
 .img-item {
-    float: left;
-    width:  300px;
-    height: 220px;
-    direction: ltr;
+    width: 100%;
+    height: 100%; /* This will take up the full height of the container */
+    object-fit: cover; /* This will cover the container, possibly cropping the image */
+    display: block;
 }
+
+
 
 .auction-item {
     background-color: #ffffff; /* White background for cleanliness */
     border-radius: 10px; /* Rounded corners for modern look */
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-    margin: 15px; /* Margin for spacing between items */
+    margin: 0 auto; /* Margin for spacing between items */
     padding: 20px; /* Padding inside the items */
     transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions for hover effects */
     overflow: hidden; /* Hide overflow */
@@ -46,6 +48,7 @@ body, html {
     transition: transform 0.5s ease, box-shadow 0.5s ease; /* Slower transition for both properties */
     will-change: transform, box-shadow;
     cursor: pointer;
+    width: 300px;
 
 }
 
@@ -846,8 +849,21 @@ body, html {
 }
 
 
+.image-container {
+    width: 300px; /* Set a fixed width for the container */
+    height: 220px; /* Set a fixed height for the container */
+    display: flex; /* Use flexbox to center the content */
+    justify-content: center; /* Center the image horizontally */
+    align-items: center; /* Center the image vertically */
+    overflow: hidden; /* Hide overflow */
+    background-color: #f7f7f7; /* Background color for the empty space around the images */
+}
 
-
+.img-item {
+    max-width: 100%; /* Maximum width of the image is the full container width */
+    max-height: 100%; /* Maximum height of the image is the full container height */
+    object-fit: contain; /* The image will be scaled to maintain its aspect ratio without cropping */
+}
 .item-details-image-container {
     margin-bottom: 30px;
     text-align: center;
@@ -1102,10 +1118,6 @@ body, html {
 
 
 
-.item-details-image-container {
-    margin-bottom: 30px;
-    text-align: center;
-}
 
 .item-details-image {
     max-width: 60%; /* Adjust this value as needed to make the image smaller */
@@ -1434,4 +1446,61 @@ h1 {
 .btn-login:hover {
     background-color: #365899; /* Darker shade on hover, adjust as needed */
 }
+
+/* Add these styles to your existing stylesheet or within a <style> tag in 'base.html' */
+
+/* Sidebar styles */
+.sidebar {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    background-color: #f8f9fa;
+    border-right: 1px solid #dee2e6; /* Right border for RTL */
+    padding-top: 1rem;
+    overflow-y: auto; /* Scrollable sidebar */
+    width: 250px; /* Adjust width as needed */
+    margin-left: auto;
+    
+}
+  .sidebar h3 {
+    text-align: center;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #dee2e6;
+}
+  
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+  .sidebar ul li a {
+    display: block;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    color: #333;
+    transition: background-color 0.3s;
+}
+  
+  .sidebar ul li a:hover {
+    background-color: #e2e6ea; /* A light grey background on hover */
+  }
+  
+
+  /* Fix the positioning of the row and container */
+  .row {
+    display: flex;
+    flex-direction: row-reverse; /* Ensures sidebar is on the right for RTL */
+    width: 100%;
+    margin: 0; /* Reset any default margins */
+}
+
+  
+.container {
+    width: 100%; /* Full width */
+    max-width: 1200px; /* Or any other max-width or none */
+    margin-right: auto; /* For RTL, ensure margin is on the right */
+    margin-left: auto; /* For RTL, ensure margin is on the left */
+    padding: 0; /* Override any default padding that could affect the layout */
+}
+
 
