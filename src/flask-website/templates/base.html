@@ -44,11 +44,14 @@
 
 {% else %}
     <!-- Guest view -->
-    <div>
-        <a href="{{ url_for('login') }}" class="px-6 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">
-            تسجيل الدخول
-        </a>
-    </div>
+<div>
+    <a href="{{ url_for('login') }}" class="btn-login">
+        تسجيل الدخول
+    </a>
+</div>
+
+
+
 {% endif %}
             <!-- Centered navbar links -->
             <div class="flex-grow flex items-center justify-center">
