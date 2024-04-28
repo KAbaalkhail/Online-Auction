@@ -177,7 +177,7 @@ def register():
         user_by_username = User.query.filter_by(username=username).first()
 
         if user_by_email or user_by_username:
-            flash("A user with this email or username already exists.")
+            flash(".هناك مستخدم بنفس هذا البريد الإلكتروني أو اسم المستخدم")
             return redirect(url_for('register'))
 
         hashed_password = generate_password_hash(password, method='sha256')
@@ -185,7 +185,7 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
-        flash('Account created successfully!')
+        flash('!تم إنشاء الحساب بنجاح')
         return redirect(url_for('login'))
 
     return render_template('register.html', form=form)
