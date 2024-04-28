@@ -54,13 +54,13 @@
             <div class="flex-grow flex items-center justify-center">
                 <ul class="flex flex-row space-x-8 font-medium">
                     <li><a href="{{ url_for('contactus') }}" class="text-gray-900 hover:text-blue-700">تواصل معنا</a></li>
-                    <li><a href="{{ url_for('auction_listing') }}" class="text-gray-900 hover:text-blue-700">المزادات</a></li>
-                    <li><a href="{{ url_for('dashboard') }}" class="text-gray-900 hover:text-blue-700">الرئيسية</a></li>
+
+                    <li><a href="{{ url_for('auction_listing') }}" class="text-gray-900 hover:text-blue-700">الرئيسية</a></li>
                 </ul>
             </div>
             <!-- Logo aligned with the navbar links -->
             <div class="flex items-center">
-                <a href="{{ url_for('dashboard') }}">
+                <a href="{{ url_for('auction_listing') }}">
                     <img src="{{ url_for('static', filename='logo-new.png') }}" class="h-20 w-20" alt="Your Website Logo">
                 </a>
             </div>

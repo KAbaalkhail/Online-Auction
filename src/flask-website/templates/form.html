@@ -43,18 +43,28 @@
                 </div>
             </fieldset>
 
-            <!-- Auction Details Section -->
-            <fieldset class="mb-4 p-4 border rounded">
-                <legend class="text-lg font-semibold mb-2">تفاصيل المزاد</legend>
-                <div>
-                    <label for="startingBid" class="text-gray-600">المزايدة الابتدائية (بالريال):</label>
-                    <input type="number" id="startingBid" name="startingBid" min="0" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required>
-                </div>
-                <div>
-                    <label for="auctionEndTime" class="text-gray-600">عدد الساعات حتى انتهاء المزاد:</label>
-                    <input type="number" id="auctionEndTime" name="auctionEndTime" min="1" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required>
-                </div>
-            </fieldset>
+<!-- Auction Details Section -->
+<fieldset class="mb-4 p-4 border rounded">
+    <legend class="text-lg font-semibold mb-2">تفاصيل المزاد</legend>
+    <div>
+        <label for="startingBid" class="text-gray-600">المزايدة الابتدائية (بالريال):</label>
+        <input type="number" id="startingBid" name="startingBid" min="0" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required>
+    </div>
+    <div>
+        <label for="auctionEndTime" class="text-gray-600">عدد الساعات حتى انتهاء المزاد:</label>
+        <select id="auctionEndTime" name="auctionEndTime" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" required>
+            <option value="1">1 ساعة</option>
+            <option value="2">2 ساعة</option>
+            <option value="3">3 ساعات</option>
+            <option value="6">6 ساعات</option>
+            <option value="12">12 ساعة</option>
+            <option value="24">24 ساعة</option>
+            <!-- Add more options as needed -->
+        </select>
+    </div>
+</fieldset>
+
+
 
             <!-- Item Condition and Location Section -->
             <fieldset class="mb-4 p-4 border rounded">

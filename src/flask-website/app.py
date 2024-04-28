@@ -132,7 +132,7 @@ def currency_filter(value, currency='SAR'):
 @app.route('/')
 def index():
     if current_user.is_authenticated:
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('auction_listing'))
     else:
         return redirect(url_for('login'))
 
@@ -157,7 +157,7 @@ def login():
 
             flash('تم تسجيل الدخول بنجاح!', 'success')
             next_page = request.args.get('next')
-            return redirect(next_page or url_for('dashboard'))
+            return redirect(next_page or url_for('auction_listing'))
         else:
             flash('اسم المستخدم أو كلمة المرور غير صحيحة. يرجى المحاولة مرة أخرى.', 'error')
     return render_template('login.html', form=form)
@@ -212,11 +212,7 @@ def logout():
     return redirect(url_for('index'))
 
 # Dashboard route
-@app.route('/main')
- # Use login_required decorator to protect this route
-def dashboard():
-    # No need to check for 'user_id' in session
-    return render_template('main.html', user=current_user)
+
 
 # Contact us route
 @app.route('/contactus')
@@ -291,10 +287,16 @@ def item_details(item_id):
     item = Item.query.get(item_id)
     if not item:
         flash('العنصر غير موجود')
-        return redirect(url_for('auction_listing'))  # 
-    # Calculate the remaining time for the auction
-    seller_phone_number = item.seller.phone_number if item.seller else None
-    now = datetime.utcnow()
+        return redirect(url_for('auction_listing'))
+
+    # Convert item.time_end to the user's timezone if it's not already timezone-aware
+    if not item.time_end.tzinfo:
+        timezone = pytz.timezone('Asia/Riyadh')
+        item.time_end = timezone.localize(item.time_end)
+
+    # Get the current time in the user's timezone
+    now = datetime.now(item.time_end.tzinfo)
+
     item_time_left = None
     if item.time_end and item.time_end > now:
         time_left = item.time_end - now
@@ -303,22 +305,10 @@ def item_details(item_id):
         minutes, seconds = divmod(remainder, 60)
         item_time_left = {'days': days, 'hours': hours, 'minutes': minutes, 'seconds': seconds}
 
-        bid_history = Bid.query.filter_by(item_id=item.id).order_by(Bid.bid_time.desc()).all()
-
-        # Ensure the start_bid is a Decimal
-        current_total_price = Decimal(item.start_bid)  # Convert start_bid to Decimal
-
-        # Update the bids with the new total price, which accumulates the bid amounts
-        for bid in reversed(bid_history):  # Reverse the list to start from the earliest bid
-            current_total_price += bid.bid_amount  # Ensure bid.bid_amount is also Decimal
-            bid.new_total_price = current_total_price  # Set the new total price for the bid
-
     return render_template(
         'item_details.html',
         item=item,
-        seller_phone_number=seller_phone_number,  # Add this line
-        item_time_left=item_time_left,
-        bid_history=bid_history
+        item_time_left=item_time_left
     )
 
 
@@ -357,9 +347,8 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 @app.route('/form', methods=['GET', 'POST'])
 def item_form():
-
-
     if request.method == 'POST':
+        # Retrieve form data
         name = request.form['itemName']
         description = request.form['itemDescription']
         start_bid = float(request.form['startingBid'])
@@ -394,7 +383,7 @@ def item_form():
             if 'user_id' in session:
                 seller_id = session['user_id']
             else:
-                flash('الرجاء تسجيل الدخول لإضافة إعلان ', 'error')
+                flash('Please log in to add an item', 'error')
                 return redirect(url_for('login'))
 
             new_item = Item(name=name, description=description, start_bid=start_bid,
@@ -405,11 +394,14 @@ def item_form():
             db.session.add(new_item)
             db.session.commit()
 
-            flash('تمت إضافة العنصر بنجاح!', 'success')
-            return redirect(url_for('item_form'))
+            flash('Item added successfully!', 'success')
+
+            # Redirect to the item details page for the newly created item
+            return redirect(url_for('item_details', item_id=new_item.id))
 
     return render_template('form.html', item_categories=item_categories, item_conditions=item_conditions,
                            seller_locations=seller_locations)
+
 
 
 @app.route('/terms', methods=['GET', 'POST'])

@@ -7,6 +7,18 @@
 {% endblock %}
 
 {% block body %}
+
+<!-- Static images container -->
+<div class="static-images-container w-full max-w-screen-lg mx-auto overflow-hidden">
+    <!-- Images here -->
+    <img class="static-image" src="{{ url_for('static', filename='aaa.png') }}" alt="Image 1">
+   <!-- <img class="static-image" src="{{ url_for('static', filename='3.png') }}" alt="Image 2">
+    <img class="static-image" src="{{ url_for('static', filename='2.png') }}" alt="Image 3">
+    <img class="static-image" src="{{ url_for('static', filename='bbb.jpg') }}" alt="Image 4">
+    <!-- More images can be added here -->
+</div>
+
+
 <!-- Search Bar -->
 <div class="search-bar">
     <form action="{{ url_for('auction_listing') }}" method="get" class="search-form">

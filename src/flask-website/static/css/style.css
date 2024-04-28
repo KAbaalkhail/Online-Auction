@@ -505,6 +505,20 @@ body, html {
     display: block; /* Stack the label and input */
 }
 
+.static-images-container {
+    max-width: 100%; /* Ensures container can take full width */
+    margin: auto; /* Center the container */
+    overflow: hidden; /* Hide any overflowing content */
+    padding: 0; /* Removes padding that may restrict full-width appearance */
+}
+
+.static-image {
+    width: 100%; /* Set image width to take up full container width */
+    height: auto; /* Maintain aspect ratio */
+    display: block; /* Ensures that the image is a block element and takes full width of its container */
+}
+
+
 .register-page .register-field input,
 .register-page .register-field select {
     width: 100%; /* Full width of the container */
