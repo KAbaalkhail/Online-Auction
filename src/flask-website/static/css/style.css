@@ -1533,6 +1533,7 @@ h1 {
     background-color: #f4f4f4;
     border: 1px solid #ccc;
     border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* subtle shadow for depth */
 }
 
 .user-info-form div {
@@ -1542,6 +1543,7 @@ h1 {
 .user-info-form label {
     display: block;
     margin-bottom: 5px;
+    font-weight: bold; /* makes labels slightly bolder */
 }
 
 .user-info-form input[type="text"],
@@ -1550,26 +1552,35 @@ h1 {
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1); /* subtle inner shadow */
 }
 
 .user-info-form input[type="submit"] {
     width: auto;
-    padding: 10px 20px;
-    background-color: #007bff;
+    padding: 10px 18px; /* Reduced padding for a smaller button */
+    background-color: #16A1A0;
     color: white;
+    font-size: 14px; /* Smaller font size for a more compact look */
     border: none;
+    border-radius: 5px; /* Rounded corners */
     cursor: pointer;
-    transition: background-color 0.3s;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow for a 3D effect */
+    transition: all 0.3s ease; /* Smooth transition for all changes */
 }
 
 .user-info-form input[type="submit"]:hover {
-    background-color: #0056b3;
+    background-color: #407978;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.15); /* Smaller shadow for a lifted effect */
+    transform: translateY(-1px); /* Slight raise */
 }
+
+
 @media (max-width: 768px) {
     .item-table {
         font-size: 14px; /* Smaller font size for better fit on smaller screens */
     }
 }
+
 
 
 
