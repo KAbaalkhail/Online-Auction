@@ -336,6 +336,7 @@ def place_bid(item_id):
     if bid_amount is None:
         flash('Invalid bid amount')
         return redirect(url_for('item_details', item_id=item_id))
+    item.buyer_id = current_user.user_id  # Ensure the buyer is updated when a bid is placed
 
     # Further validation can be added here
 
@@ -426,7 +427,6 @@ def terms():
     # Render the terms page
     return render_template('terms.html')
 
-
 @app.route('/user')
 @login_required
 def user_details():
@@ -435,6 +435,8 @@ def user_details():
 
     # Fetching items listed by the user
     items_sold = current_user.items_sold
+
+    # Format the time left for each item and add additional details as needed
 
     timezone = pytz.timezone('Asia/Riyadh')
     now = datetime.now(timezone)
@@ -467,7 +469,6 @@ def user_details():
 
     return render_template('user.html', items_bought=items_bought, items_sold=items_sold)
 
-from flask import request
 
 # Update the user information route to handle POST requests
 @app.route('/user_information', methods=['GET', 'POST'])
