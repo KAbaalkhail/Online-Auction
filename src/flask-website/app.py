@@ -74,7 +74,7 @@ class RegistrationForm(FlaskForm):
     username = StringField('اسم المستخدم', validators=[DataRequired(), Length(min=4, max=20)])
     email = StringField('البريد الالكتروني', validators=[DataRequired(), Email()])
     password = PasswordField('كلمة المرور', validators=[DataRequired()])
-    confirm_password = PasswordField('تأكيد كلمة المرور', validators=[DataRequired(), EqualTo('password', message='Passwords must match')])
+    confirm_password = PasswordField('تأكيد كلمة المرور', validators=[DataRequired(), EqualTo('password', message='كلمات المرور يجب أن تتطابق')])
     phone_number = StringField('رقم الهاتف')  # Add phone number field
     submit = SubmitField('التسجيل')
 
@@ -93,10 +93,6 @@ class Bid(db.Model):
 
     user = db.relationship('User', backref='bids')
     item = db.relationship('Item', backref='bids')
-
-
-
-
 
 # Define Item model
 class Item(db.Model):
@@ -177,7 +173,7 @@ def register():
         user_by_username = User.query.filter_by(username=username).first()
 
         if user_by_email or user_by_username:
-            flash("A user with this email or username already exists.")
+            flash("هناك مستخدم بنفس هذا البريد الإلكتروني أو اسم المستخدم بالفعل.")
             return redirect(url_for('register'))
 
         hashed_password = generate_password_hash(password, method='sha256')
@@ -185,7 +181,7 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
-        flash('Account created successfully!')
+        flash('تم إنشاء الحساب بنجاح!')
         return redirect(url_for('login'))
 
     return render_template('register.html', form=form)
@@ -200,7 +196,7 @@ def user_profile():
         user = User.query.get(session['user_id'])
         return render_template('user_profile.html', user=user)
     else:
-        flash('Please log in to access your profile')
+        flash('الرجاء تسجيل الدخول للوصول إلى ملفك الشخصي')
         return redirect(url_for('login'))
 
 # Logout route
@@ -334,7 +330,7 @@ def place_bid(item_id):
 
     bid_amount = request.form.get('bid_amount', type=float)
     if bid_amount is None:
-        flash('Invalid bid amount')
+        flash('مبلغ خاطئ')
         return redirect(url_for('item_details', item_id=item_id))
     item.buyer_id = current_user.user_id  # Ensure the buyer is updated when a bid is placed
 
@@ -348,7 +344,7 @@ def place_bid(item_id):
         flash('تمت المزايدة بنجاح!', 'success')
     except Exception as e:
         db.session.rollback()
-        flash('An error occurred. Please try again.', 'error')
+        flash('حدث خطأ. يرجى المحاولة مرة أخرى.', 'error')
         app.logger.error('Error on bid submission: %s', e)
 
     return redirect(url_for('item_details', item_id=item_id))
@@ -373,14 +369,14 @@ def item_form():
 
         # Check if the post request has the file part
         if 'file' not in request.files:
-            flash('No file part', 'error')
+            flash('لا يوجد جزء ملف', 'error')
             return redirect(request.url)
 
         file = request.files['file']
 
         # If the user does not select a file, the browser submits an empty file without a filename
         if file.filename == '':
-            flash('No selected file', 'error')
+            flash('لم يتم تحديد ملف', 'error')
             return redirect(request.url)
 
         if file and allowed_file(file.filename):
@@ -449,9 +445,9 @@ def user_details():
             days = time_left.days
             hours, remainder = divmod(time_left.seconds, 3600)
             minutes, seconds = divmod(remainder, 60)
-            item.time_left = f"{days} days {hours} hours {minutes} minutes {seconds} seconds"
+            item.time_left = f"{days} أيام {hours} ساعات {minutes} دقائق {seconds} ثواني"
         else:
-            item.time_left = "Auction Ended"
+            item.time_left = "انتهى المزاد"
         item.end_time_iso = end_time.isoformat()
 
     # Format the time left for each item listed by the user
@@ -462,9 +458,9 @@ def user_details():
             days = time_left.days
             hours, remainder = divmod(time_left.seconds, 3600)
             minutes, seconds = divmod(remainder, 60)
-            item.time_left = f"{days} days {hours} hours {minutes} minutes {seconds} seconds"
+            item.time_left = f"{days} أيام {hours} ساعات {minutes} دقائق {seconds} ثواني"
         else:
-            item.time_left = "Auction Ended"
+            item.time_left = "انتهى المزاد"
         item.end_time_iso = end_time.isoformat()
 
     return render_template('user.html', items_bought=items_bought, items_sold=items_sold)
@@ -479,7 +475,7 @@ def user_information():
 
     # Check if the user exists
     if user is None:
-        flash('User not found', 'error')
+        flash('المستخدم غير موجود', 'error')
         return redirect(url_for('index'))  # Redirect to the index page if user is not found
 
     # If the request method is POST, it means the form is submitted
@@ -492,21 +488,18 @@ def user_information():
         # Check if the new username already exists in the database
         existing_user = User.query.filter_by(username=new_username).first()
         if existing_user and existing_user.user_id != user.user_id:
-            flash('Username already exists. Please choose a different username.', 'error')
+            flash('اسم المستخدم موجود بالفعل. الرجاء اختيار اسم مستخدم مختلف.', 'error')
         else:
-            # Check if the new email address already exists in the database
-            existing_email = User.query.filter_by(email=new_email).first()
-            if existing_email and existing_email.user_id != user.user_id:
-                flash('Email address already exists. Please choose a different email address.', 'error')
-            else:
-                user.username = new_username
-                user.email = new_email
-                user.phone_number = new_phone_number  # Update phone number
-                db.session.commit()  # Commit the changes to the database
-                flash('User information updated successfully!', 'success')
+            # Update the user's information
+            user.username = new_username
+            user.email = new_email
+            user.phone_number = new_phone_number
+            db.session.commit()  # Commit the changes to the database
+            flash('تم تحديث المعلومات بنجاح!', 'success')
 
-    # Render the user_information.html template with the user's information
+    # Render the user information page with the user's current information
     return render_template('user_information.html', user=user)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
