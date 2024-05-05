@@ -418,7 +418,7 @@ body, html {
 .login-page .login-action .btn {
     width: 100%;
     padding: 12px 20px;
-    background-color: #4267B2;
+    background-color: #16A1A0;
     color: #fff;
     border: none;
     border-radius: 20px;
@@ -428,7 +428,7 @@ body, html {
 }
 
 .login-page .login-action .btn:hover {
-    background-color: #365899;
+    background-color: #407978;
 }
 
 .login-page p {
@@ -439,7 +439,7 @@ body, html {
 }
 
 .login-page p a {
-    color: #4267B2;
+    color: #16A1A0;
     text-decoration: none;
 }
 
@@ -537,7 +537,7 @@ body, html {
 .register-page .register-action .btn {
     width: 100%; /* Button to take full width of the container */
     padding: 10px;
-    background-color: #4267B2;
+    background-color: #16A1A0 ;
     color: white;
     border: none;
     border-radius: 4px;
@@ -545,7 +545,7 @@ body, html {
 }
 
 .register-page .register-action .btn:hover {
-    background-color: #365899;
+    background-color: #407978;
 }
 
 .register-page .alternate-action {
@@ -561,13 +561,13 @@ body, html {
 }
 
 .register-page .alternate-action a {
-    color: #4267B2; /* Blue color for the link */
+    color: #16A1A0; /* Blue color for the link */
     text-decoration: none;
 }
 
 .register-page .alternate-action a:hover {
     text-decoration: underline; /* Underline on hover for better user experience */
-    color: #365899; /* Darker blue on hover to indicate clickable */
+    color: #407978; /* Darker blue on hover to indicate clickable */
 }
 
 
@@ -610,7 +610,7 @@ body, html {
 
 .search-form button {
   padding: 0.75rem 1rem;
-  background-color: #4285f4;
+  background-color: #16A1A0 ;
   color: white;
   text-transform: uppercase;
   font-weight: bold;
@@ -621,7 +621,7 @@ body, html {
 
 .search-form button:hover,
 .search-form button:focus {
-  background-color: #357ae8;
+  background-color: #407978;
 }
 
 /* Responsive adjustments for smaller screens */
@@ -1445,7 +1445,7 @@ h1 {
 .btn-login {
     padding: 6px 24px; /* px-6 py-2 */
     color: white; /* text-white */
-    background-color: #4267B2; /* Updated background color */
+    background-color: #16A1A0 ; /* Updated background color */
     border-radius: 0.375rem; /* rounded */
     text-decoration: none; /* Removes underline from the link */
     display: inline-block; /* Ensures proper padding and dimensions */
@@ -1453,7 +1453,7 @@ h1 {
 }
 
 .btn-login:hover {
-    background-color: #365899; /* Darker shade on hover, adjust as needed */
+    background-color: #407978; /* Darker shade on hover, adjust as needed */
 }
 
 /* Add these styles to your existing stylesheet or within a <style> tag in 'base.html' */
@@ -1569,4 +1569,56 @@ h1 {
     .item-table {
         font-size: 14px; /* Smaller font size for better fit on smaller screens */
     }
+}
+
+
+
+
+
+.slideshow-container {
+    position: relative;
+    width: 100%; /* Adjust this if you know the exact width you want */
+    height: 500px; /* Adjust height to maintain the aspect ratio or fit your design */
+}
+
+.slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover; /* This will cover the entire container, can be changed to 'contain' */
+    background-position: center;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.slide:first-child {
+    opacity: 1;  /* Initially display the first image */
+}
+
+
+/* Ensures dropdown appears above other content */
+#user-dropdown-menu {
+    position: absolute;
+    right: 0;
+    z-index: 1000;  /* High z-index to float above other page elements */
+    width: 200px;  /* Adjust width as needed */
+    background-color: white; /* Ensures dropdown is visible against any background */
+    border: 1px solid #ccc; /* Gives the dropdown a distinct border */
+    border-radius: 5px; /* Optional: rounds the corners of the dropdown */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Adds a subtle shadow for better visibility */
+}
+
+/* Style for dropdown items */
+#user-dropdown-menu a {
+    display: block;
+    padding: 10px;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+#user-dropdown-menu a:hover {
+    background-color: #f0f0f0;
 }

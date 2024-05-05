@@ -8,12 +8,19 @@
 
 {% block body %}
 
-<!-- Static images container -->
-<div class="static-images-container w-full max-w-screen-lg mx-auto overflow-hidden">
-    <!-- Images here -->
-    <img class="static-image" src="{{ url_for('static', filename='aaa.png') }}" alt="Image 1">
-
+<!-- Slideshow Container -->
+<div class="slideshow-container w-full mx-auto overflow-hidden relative" style="height: 500px;">
+    <!-- Sliding images -->
+    <div class="slide" style="background-image: url('{{ url_for('static', filename='ccc.png') }}');"></div>
+    <div class="slide" style="background-image: url('{{ url_for('static', filename='bbb.png') }}');"></div>
 </div>
+
+<!-- Additional HTML code can be added below -->
+
+
+
+
+
 
 
 <!-- Search Bar -->
@@ -121,9 +128,6 @@
     {% endfor %}
 </div>
 
-
-
-
 {% endblock %}
 {% block extra_scripts %}
 <script>
@@ -177,9 +181,6 @@ document.addEventListener('DOMContentLoaded', function() {
     setInterval(updateAuctionTimes, 1000); // Then every second
 });
 
-
-
-
 document.addEventListener('DOMContentLoaded', function() {
     // Get the sort form and select elements
     var sortForm = document.getElementById('sort-form');
@@ -196,6 +197,20 @@ document.addEventListener('DOMContentLoaded', function() {
     sortOrderSelect.addEventListener('change', submitForm);
 });
 
+
+document.addEventListener('DOMContentLoaded', function() {
+    let slides = document.querySelectorAll('.slide');
+    let currentSlide = 0;
+    const numSlides = slides.length;
+
+    function nextSlide() {
+        slides[currentSlide].style.opacity = 0;  // Hide current slide
+        currentSlide = (currentSlide + 1) % numSlides;  // Move to the next slide
+        slides[currentSlide].style.opacity = 1;  // Show new slide
+    }
+
+    setInterval(nextSlide, 3000);  // Change slide every 3000 ms (3 seconds)
+});
 
 </script>
 {% endblock %}
