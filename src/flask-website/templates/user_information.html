@@ -4,19 +4,19 @@
 
 {% block body %}
 <div class="container">
-    <div class="row rtl-layout">
-        <!-- Sidebar should be the first in the HTML when using row-reverse -->
+    <div class="row rtl-layout"> <!-- The 'rtl-layout' class will ensure proper RTL styling -->
+        <!-- Sidebar Menu -->
         <div class="col-md-3 sidebar">
             <h3>القائمة</h3>
-            <ul class="menu">
+            <ul>
                 <li><a href="{{ url_for('user_information') }}">المعلومات الشخصية</a></li>
                 <li><a href="{{ url_for('user_details') }}">العمليات</a></li>
+                <!-- More links as needed -->
             </ul>
         </div>
-        <!-- Main content area -->
-        <div class="col-md-9 content-area">
+        <div class="col-md-9 user-info-content-area">
             <h1>معلومات المستخدم</h1>
-            <form method="post">
+            <form class="user-info-form" method="post">
                 <div>
                     <label for="username">اسم المستخدم:</label>
                     <input type="text" id="username" name="username" value="{{ user.username }}">

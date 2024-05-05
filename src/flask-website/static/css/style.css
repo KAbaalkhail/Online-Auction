@@ -1387,27 +1387,36 @@ h1 {
 }
 
 .container {
-  width: 80%;
-  margin: 0 auto;
-  padding: 20px;
+    width: 100%; /* Take full width to maintain consistency in alignment */
+    max-width: 1200px; /* or your preferred max width */
+    margin: 0 auto; /* Center the container */
+    padding: 0 20px; /* Optional: for some padding from the edges of the screen */
+    box-sizing: border-box; /* Includes padding in the width calculation */
+}
+.table-responsive {
+    width: 100%; /* Adjust this if you want the table to be narrower than the full width */
+    margin: 0 auto; /* Centers the table */
+    overflow-x: auto; /* Keeps the responsive scrolling feature */
 }
 
 /* Table Styles */
 .item-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
+    width: 100%; /* Ensures the table stretches to the full width of its container */
+    border-collapse: collapse; /* Removes space between borders */
+    margin-top: 20px; /* Adds vertical spacing around the table */
+    background-color: #fff; /* Optional: Sets a background color for the table */
 }
 
-.item-table th,
-.item-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: center;
+
+.item-table th, .item-table td {
+    padding: 12px; /* Consistent padding in cells */
+    text-align: center; /* Ensures text in cells is centered */
 }
 
 .item-table th {
-  background-color: #f2f2f2;
+    background-color: #f2f2f2; /* Light grey background for headers */
+    color: #333; /* Dark text for better readability */
+    font-weight: bold; /* Makes header text bold */
 }
 
 /* Message Styles */
@@ -1504,3 +1513,60 @@ h1 {
 }
 
 
+
+
+/* Main content area styling */
+.user-info-content-area {
+    flex: 1;
+    padding: 20px;
+}
+
+.user-info-content-area h1 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Form styling */
+.user-info-form {
+    width: 100%;
+    padding: 10px;
+    background-color: #f4f4f4;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.user-info-form div {
+    margin-bottom: 10px;
+}
+
+.user-info-form label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.user-info-form input[type="text"],
+.user-info-form input[type="email"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.user-info-form input[type="submit"] {
+    width: auto;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.user-info-form input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+@media (max-width: 768px) {
+    .item-table {
+        font-size: 14px; /* Smaller font size for better fit on smaller screens */
+    }
+}
