@@ -20,8 +20,8 @@
 <!-- Header -->
 <header>
     <!-- Navbar -->
-    <nav class="bg-white shadow-md w-full">
-        <div class="max-w-screen-xl mx-auto px-4 py-2 flex justify-between items-center">
+<nav class="bg-white shadow-md w-full py-1">
+    <div class="max-w-screen-xl mx-auto px-4 py-2 flex justify-between items-center">
 <!-- Conditional display based on user login status -->
 {% if current_user.is_authenticated %}
 <!-- User dropdown menu -->
@@ -54,17 +54,18 @@
 
 {% endif %}
             <!-- Centered navbar links -->
-            <div class="flex-grow flex items-center justify-center">
-                <ul class="flex flex-row space-x-8 font-medium">
-                    <li><a href="{{ url_for('contactus') }}" class="text-gray-900 hover:text-blue-700">تواصل معنا</a></li>
+<!-- Centered navbar links -->
+<div class="flex-grow flex items-center justify-center">
+    <ul class="flex flex-row space-x-8 font-medium">
+        <li><a href="{{ url_for('contactus') }}" class="text-xl text-gray-900 hover:text-blue-700">تواصل معنا</a></li> <!-- Increased text size to text-xl -->
+        <li><a href="{{ url_for('auction_listing') }}" class="text-xl text-gray-900 hover:text-blue-700">الرئيسية</a></li> <!-- Increased text size to text-xl -->
+    </ul>
+</div>
 
-                    <li><a href="{{ url_for('auction_listing') }}" class="text-gray-900 hover:text-blue-700">الرئيسية</a></li>
-                </ul>
-            </div>
             <!-- Logo aligned with the navbar links -->
             <div class="flex items-center">
                 <a href="{{ url_for('auction_listing') }}">
-                    <img src="{{ url_for('static', filename='logo-new.png') }}" class="h-20 w-20" alt="Your Website Logo">
+                    <img src="{{ url_for('static', filename='logo-new.png') }}" class="h-24 w-24" alt="Your Website Logo">
                 </a>
             </div>
         </div>
