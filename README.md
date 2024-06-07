@@ -32,7 +32,7 @@ Mzadi is an online auction system tailored for the Saudi Arabian market, designe
 ## Future Work
 
 - **Expand Database Capacity**: To accommodate more users and listings.
-- **Advanced Security Measures**: Enhance data protection protocols.
+- **Advanced Security Measures**: Enhance the overall Security 
 - **Mobile App Development**: Create dedicated apps for iOS and Android.
 
 ## Contributors
